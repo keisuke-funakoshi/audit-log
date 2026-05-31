@@ -1174,7 +1174,7 @@ function printAgenda(){
   }
   h+='<div style="text-align:center;font-size:9px;color:#aaa;padding-top:16px;border-top:1px solid #eee;font-family:monospace">AUDIT LOG &nbsp;|&nbsp; 作成日：'+today+'</div></div>';
   document.getElementById('printArea').innerHTML=h;
-  setTimeout(function(){window.print();},100);
+  openPrintWindow(h);
 }
 
 // ===== ACTIONS =====
@@ -1262,17 +1262,68 @@ function togglePdfChk(key){
   box.classList.toggle('checked',pdfChecks[key]);
   box.textContent=pdfChecks[key]?'✓':'';
 }
+function openPrintWindow(html){
+  var css='body{margin:0;padding:0;background:#ffffff;}'+
+    '.p-page{font-family:\'Helvetica Neue\',Arial,\'Hiragino Kaku Gothic ProN\',\'Meiryo\',sans-serif;font-size:10px;color:#1a2332;background:#ffffff;padding:28px 32px;page-break-after:always;border-bottom:1px solid #dde3ec;margin-bottom:0;}'+
+    '.p-page:last-child{page-break-after:avoid;border-bottom:none;}'+
+    '.p-head{border-bottom:3px solid #00aacc;padding-bottom:16px;margin-bottom:16px;}'+
+    '.p-label{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;margin-bottom:6px;}'+
+    '.p-title{font-size:20px;font-weight:700;color:#004466;margin-bottom:8px;line-height:1.4;}'+
+    '.p-purpose{font-size:12px;color:#5a7a90;margin-bottom:10px;}'+
+    '.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;}'+
+    '.p-ml{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;}'+
+    '.p-mv{font-size:11px;color:#1a2332;font-weight:600;margin-top:2px;}'+
+    '.p-section{margin-bottom:14px;}'+
+    '.p-sh{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;border-bottom:1.5px solid #ccddee;padding-bottom:3px;margin-bottom:8px;}'+
+    '.p-box{background:#eef4f8;padding:8px 12px;border-left:3px solid #00aacc;font-size:10px;line-height:1.8;color:#1a2332;border-radius:0 4px 4px 0;}'+
+    '.p-stats{display:flex;gap:8px;margin-top:8px;}'+
+    '.p-stat{flex:1;text-align:center;background:#eef4f8;border:1px solid #ccddee;border-radius:5px;padding:6px 4px;}'+
+    '.p-stat-n{font-size:16px;font-weight:700;color:#004466;font-family:monospace;line-height:1;}'+
+    '.p-stat-l{font-size:7px;color:#7a9ab0;font-family:monospace;margin-top:2px;}'+
+    '.p-cat{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;padding:3px 0;border-bottom:1px solid #ccddee;margin-top:8px;margin-bottom:3px;}'+
+    '.p-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #eef0f3;align-items:flex-start;font-size:9px;color:#1a2332;}'+
+    '.p-bdg{font-size:8px;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap;font-family:monospace;flex-shrink:0;}'+
+    '.p-ok{background:#d0f0e0;color:#006633;}'+
+    '.p-ng{background:#fde0e0;color:#bb1100;}'+
+    '.p-na{background:#e8e8e8;color:#666666;}'+
+    '.p-pend{background:#fff0cc;color:#886600;}'+
+    '.p-imgs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;}'+
+    '.p-imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #ccddee;display:block;}'+
+    '.p-proc{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;}'+
+    '.p-proc-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;}'+
+    '.p-proc-note{font-size:10px;color:#334455;line-height:1.7;}'+
+    '.p-iss{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:6px;}'+
+    '.p-iss-hd{display:flex;align-items:center;gap:8px;margin-bottom:4px;}'+
+    '.p-iss-num{font-family:monospace;font-size:11px;font-weight:700;color:#004466;}'+
+    '.p-iss-title{font-size:11px;font-weight:700;color:#1a2332;flex:1;}'+
+    '.p-iss-st{font-size:9px;font-family:monospace;color:#7a9ab0;}'+
+    '.p-iss-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:3px;}'+
+    '.p-iss-meta{font-size:9px;color:#7a9ab0;font-family:monospace;}'+
+    '.p-sum{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;}'+
+    '.p-sum-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;}'+
+    '.p-sum-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;}'+
+    '.p-act{padding:3px 0;border-bottom:1px solid #eef0f3;font-size:9px;color:#1a2332;}'+
+    '.p-ft{text-align:center;font-size:8px;color:#aabbcc;padding:8px 0;border-top:1px solid #ddeeff;font-family:monospace;margin-top:8px;}'+
+    '.p-ul{margin:0;padding-left:18px;list-style:disc;}'+
+    '.p-ul li{font-size:11px;color:#1a2332;line-height:2;}'+
+    '@media print{body{background:#ffffff;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}';
+  var win=window.open('','_blank');
+  if(!win){toast('ポップアップをブロックされました。ブラウザの設定を確認してください','var(--danger)');return;}
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>報告書</title><style>'+css+'</style></head><body>'+html+'</body></html>');
+  win.document.close();
+  win.onload=function(){win.focus();win.print();};
+  setTimeout(function(){if(win&&!win.closed){win.focus();win.print();}},600);
+}
+
 function doPrintSelected(){
   var m=getMeta(),sc=clScore();
-  document.getElementById('printArea').innerHTML=buildPrint(m,cur.checklist,cur.procs,cur.issues,cur.summary,cur.actions,sc,pdfChecks);
   closePdfModal();
-  setTimeout(function(){window.print();},200);
+  openPrintWindow(buildPrint(m,cur.checklist,cur.procs,cur.issues,cur.summary,cur.actions,sc,pdfChecks));
 }
 function printV(idx){
   var vis=visits[idx];
   var all={home:true,check:true,proc:true,issue:true,summary:true,action:true};
-  document.getElementById('printArea').innerHTML=buildPrint(vis.meta,vis.checklist||[],vis.procs||[],vis.issues||[],vis.summary||[],vis.actions||[],vis.score,all);
-  setTimeout(function(){window.print();},100);
+  openPrintWindow(buildPrint(vis.meta,vis.checklist||[],vis.procs||[],vis.issues||[],vis.summary||[],vis.actions||[],vis.score,all));
 }
 
 // ===== EXPORT RENDER =====
