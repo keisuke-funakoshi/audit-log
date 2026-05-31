@@ -141,34 +141,51 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 /* PRINT */
 #printArea{display:none;}
 @media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
   body>*{display:none !important;}
-  #printArea{display:block !important;font-family:sans-serif;font-size:10px;color:#1a2332;background:#fff !important;}
-  #printArea *{background:#fff !important;color:#1a2332 !important;border-color:#dde3ec !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .pc{border-bottom:3px solid #00c8ff !important;padding:24px 28px;margin-bottom:16px;page-break-after:avoid;}
-  .pt{font-size:22px;font-weight:700;color:#006688 !important;margin-bottom:10px;line-height:1.4;}
-  .pmg{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-top:10px;}
-  .pml{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#6a8099 !important;font-family:monospace;}
-  .pmv{font-size:11px;color:#1a2332 !important;margin-top:2px;font-weight:600;}
-  .ps{padding:10px 28px 16px;}
-  .pst{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#6a8099 !important;margin-bottom:6px;font-family:monospace;border-bottom:1px solid #dde3ec !important;padding-bottom:4px;}
-  .ptxt{font-size:10px;line-height:1.8;background:#f0f4f8 !important;padding:8px 12px;border-left:3px solid #00c8ff !important;color:#333 !important;}
-  .pstats{display:flex;gap:8px;margin-top:8px;}
-  .pst2{text-align:center;background:#f0f4f8 !important;border:1px solid #dde3ec !important;border-radius:5px;padding:7px 12px;}
-  .pstn{font-size:18px;font-weight:700;color:#006688 !important;line-height:1;font-family:monospace;}
-  .pstl{font-size:7px;color:#6a8099 !important;font-family:monospace;margin-top:2px;}
-  .pcc{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#6a8099 !important;padding:4px 0;border-bottom:1px solid #dde3ec !important;margin-top:10px;font-family:monospace;}
-  .pcr{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #f4f4f4 !important;font-size:9px;}
-  .pbdg{font-size:8px;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap;font-family:monospace;}
-  .bok{background:#d4f4e8 !important;color:#008855 !important;}
-  .bng{background:#fde8e8 !important;color:#cc2200 !important;}
-  .bna{background:#eee !important;color:#888 !important;}
-  .bpend{background:#fff3cd !important;color:#996600 !important;}
-  .pimgs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;}
-  .pimgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #dde3ec !important;}
-  .par{padding:3px 0;border-bottom:1px solid #f4f4f4 !important;font-size:9px;}
-  .piss{border:1px solid #dde3ec !important;border-radius:4px;padding:6px 10px;margin-bottom:6px;page-break-inside:avoid;}
-  .psum{border:1px solid #dde3ec !important;border-radius:4px;padding:8px 10px;margin-bottom:8px;page-break-inside:avoid;}
-  .pft{text-align:center;font-size:9px;color:#aaa !important;padding:8px;border-top:1px solid #eee !important;font-family:monospace;}
+  #printArea{display:block !important;}
+  .p-page{font-family:'Noto Sans JP',sans-serif;font-size:10px;color:#1a2332;background:#ffffff;padding:28px 32px;page-break-after:always;}
+  .p-page:last-child{page-break-after:avoid;}
+  .p-head{border-bottom:3px solid #00aacc;padding-bottom:16px;margin-bottom:16px;}
+  .p-label{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;margin-bottom:6px;}
+  .p-title{font-size:20px;font-weight:700;color:#004466;margin-bottom:10px;line-height:1.4;}
+  .p-purpose{font-size:12px;color:#5a7a90;margin-bottom:10px;}
+  .p-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;}
+  .p-ml{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;}
+  .p-mv{font-size:11px;color:#1a2332;font-weight:600;margin-top:2px;}
+  .p-section{margin-bottom:14px;}
+  .p-sh{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;border-bottom:1.5px solid #ccddee;padding-bottom:3px;margin-bottom:8px;}
+  .p-box{background:#eef4f8;padding:8px 12px;border-left:3px solid #00aacc;font-size:10px;line-height:1.8;color:#1a2332;border-radius:0 4px 4px 0;}
+  .p-stats{display:flex;gap:8px;margin-top:8px;}
+  .p-stat{flex:1;text-align:center;background:#eef4f8;border:1px solid #ccddee;border-radius:5px;padding:6px 4px;}
+  .p-stat-n{font-size:16px;font-weight:700;color:#004466;font-family:monospace;line-height:1;}
+  .p-stat-l{font-size:7px;color:#7a9ab0;font-family:monospace;margin-top:2px;}
+  .p-cat{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;padding:3px 0;border-bottom:1px solid #ccddee;margin-top:8px;margin-bottom:3px;}
+  .p-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #eef0f3;align-items:flex-start;font-size:9px;color:#1a2332;}
+  .p-bdg{font-size:8px;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap;font-family:monospace;flex-shrink:0;}
+  .p-ok{background:#d0f0e0;color:#006633;}
+  .p-ng{background:#fde0e0;color:#bb1100;}
+  .p-na{background:#e8e8e8;color:#666666;}
+  .p-pend{background:#fff0cc;color:#886600;}
+  .p-imgs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;}
+  .p-imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #ccddee;display:block;}
+  .p-proc{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;}
+  .p-proc-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;}
+  .p-proc-note{font-size:10px;color:#334455;line-height:1.7;}
+  .p-iss{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:6px;}
+  .p-iss-hd{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .p-iss-num{font-family:monospace;font-size:11px;font-weight:700;color:#004466;}
+  .p-iss-title{font-size:11px;font-weight:700;color:#1a2332;flex:1;}
+  .p-iss-st{font-size:9px;font-family:monospace;color:#7a9ab0;}
+  .p-iss-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:3px;}
+  .p-iss-meta{font-size:9px;color:#7a9ab0;font-family:monospace;}
+  .p-sum{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;}
+  .p-sum-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;}
+  .p-sum-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;}
+  .p-act{padding:3px 0;border-bottom:1px solid #eef0f3;font-size:9px;color:#1a2332;}
+  .p-ft{text-align:center;font-size:8px;color:#aabbcc;padding:8px 0;border-top:1px solid #ddeeff;font-family:monospace;margin-top:8px;}
+  .p-ul{margin:0;padding-left:18px;list-style:disc;}
+  .p-ul li{font-size:11px;color:#1a2332;line-height:2;}
 }
 </style>
 </head>
@@ -1320,94 +1337,122 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
   var pct=score&&score.pct!==null?score.pct+'%':'—';
   var rank=score&&score.pct!==null?(score.pct>=90?'A+':score.pct>=80?'A':score.pct>=70?'B+':score.pct>=60?'B':'C'):'—';
   var h='';
+
   if(chks.home){
-    h+='<div class="pc">'+
-      '<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#6a8099;margin-bottom:10px;font-family:monospace">Quality Audit Report</div>'+
-      '<div class="pt">'+esc(meta.supName||'（未入力）')+'<br><span style="font-size:13px;color:#6a8099;font-weight:400">'+esc(meta.purpose||'')+'</span></div>'+
-      '<div class="pmg">'+
-        (meta.date?'<div><div class="pml">訪問日</div><div class="pmv">'+meta.date+'</div></div>':'')+
-        (meta.address?'<div><div class="pml">住所</div><div class="pmv">'+esc(meta.address)+'</div></div>':'')+
-        (meta.reporter?'<div><div class="pml">担当者</div><div class="pmv">'+esc(meta.reporter)+'</div></div>':'')+
-        (meta.contact?'<div><div class="pml">先方担当</div><div class="pmv">'+esc(meta.contact)+'</div></div>':'')+
-        '<div><div class="pml">作成日</div><div class="pmv">'+today+'</div></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="ps"><div class="pst">総評・概要</div>'+
-      '<div class="ptxt">'+(meta.overall?esc(meta.overall).replace(/\n/g,'<br>'):'（記録なし）')+'</div>'+
-      '<div class="pstats">'+
-        '<div class="pst2"><div class="pstn">'+pct+'</div><div class="pstl">スコア</div></div>'+
-        '<div class="pst2"><div class="pstn">'+rank+'</div><div class="pstl">ランク</div></div>'+
-        (score?'<div class="pst2"><div class="pstn">'+score.ok+'</div><div class="pstl">OK</div></div>':'')+
-        (score?'<div class="pst2"><div class="pstn">'+score.ng+'</div><div class="pstl">NG</div></div>':'')+
-        '<div class="pst2"><div class="pstn">'+(issues||[]).filter(function(x){return x.status==='open';}).length+'</div><div class="pstl">未対応課題</div></div>'+
-      '</div></div>';
+    h+='<div class="p-page">';
+    h+='<div class="p-head">';
+    h+='<div class="p-label">Quality Audit Report</div>';
+    h+='<div class="p-title">'+esc(meta.supName||'（未入力）')+'</div>';
+    if(meta.purpose)h+='<div class="p-purpose">'+esc(meta.purpose)+'</div>';
+    h+='<div class="p-grid">';
+    if(meta.date)    h+='<div><div class="p-ml">訪問日</div><div class="p-mv">'+meta.date+'</div></div>';
+    if(meta.address) h+='<div><div class="p-ml">住所</div><div class="p-mv">'+esc(meta.address)+'</div></div>';
+    if(meta.reporter)h+='<div><div class="p-ml">担当者</div><div class="p-mv">'+esc(meta.reporter)+'</div></div>';
+    if(meta.contact) h+='<div><div class="p-ml">先方担当</div><div class="p-mv">'+esc(meta.contact)+'</div></div>';
+    h+='<div><div class="p-ml">作成日</div><div class="p-mv">'+today+'</div></div>';
+    h+='</div></div>';
+    h+='<div class="p-section"><div class="p-sh">総評・概要</div>';
+    h+='<div class="p-box">'+(meta.overall?esc(meta.overall).replace(/\n/g,'<br>'):'（記録なし）')+'</div>';
+    h+='<div class="p-stats">';
+    h+='<div class="p-stat"><div class="p-stat-n">'+pct+'</div><div class="p-stat-l">スコア</div></div>';
+    h+='<div class="p-stat"><div class="p-stat-n">'+rank+'</div><div class="p-stat-l">ランク</div></div>';
+    if(score)h+='<div class="p-stat"><div class="p-stat-n">'+score.ok+'</div><div class="p-stat-l">OK</div></div>';
+    if(score)h+='<div class="p-stat"><div class="p-stat-n">'+score.ng+'</div><div class="p-stat-l">NG</div></div>';
+    h+='<div class="p-stat"><div class="p-stat-n">'+(issues||[]).filter(function(x){return x.status==='open';}).length+'</div><div class="p-stat-l">未対応課題</div></div>';
+    h+='</div></div>';
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='</div>';
   }
+
   if(chks.check&&checklist&&checklist.length){
-    h+='<div class="ps"><div class="pst">チェックリスト</div>';
+    h+='<div class="p-page">';
+    h+='<div class="p-section"><div class="p-sh">チェックリスト</div>';
     checklist.forEach(function(cat){
-      h+='<div class="pcc">'+esc(cat.name)+'</div>';
+      h+='<div class="p-cat">'+esc(cat.name)+'</div>';
       cat.items.forEach(function(it){
-        var b=it.status==='ok'?'<span class="pbdg bok">OK</span>':it.status==='ng'?'<span class="pbdg bng">NG</span>':it.status==='na'?'<span class="pbdg bna">N/A</span>':'<span class="pbdg bpend">未</span>';
-        h+='<div class="pcr">'+b+'<div>'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#888">'+esc(it.note)+'</div>':'')+'</div></div>';
+        var b=it.status==='ok'?'<span class="p-bdg p-ok">OK</span>':
+               it.status==='ng'?'<span class="p-bdg p-ng">NG</span>':
+               it.status==='na'?'<span class="p-bdg p-na">N/A</span>':
+               '<span class="p-bdg p-pend">未</span>';
+        h+='<div class="p-row">'+b+'<div>'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#7a9ab0;margin-top:2px;">'+esc(it.note)+'</div>':'')+'</div></div>';
         var ph=it.photos||[];
-        if(ph.length)h+='<div class="pimgs">'+ph.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
+        if(ph.length)h+='<div class="p-imgs">'+ph.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
       });
     });
     h+='</div>';
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='</div>';
   }
+
   if(chks.proc&&procs&&procs.length){
-    h+='<div class="ps"><div class="pst">設備・工程メモ</div>';
+    h+='<div class="p-page">';
+    h+='<div class="p-section"><div class="p-sh">設備・工程メモ</div>';
     procs.forEach(function(p,i){
-      h+='<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;margin-bottom:4px;font-family:monospace">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
-      if(p.note)h+='<div style="font-size:10px;color:#555;line-height:1.7">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
-      if(p.photos&&p.photos.length)h+='<div class="pimgs">'+p.photos.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
+      h+='<div class="p-proc">';
+      h+='<div class="p-proc-name">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
+      if(p.note)h+='<div class="p-proc-note">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
+      if(p.photos&&p.photos.length)h+='<div class="p-imgs">'+p.photos.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
       h+='</div>';
     });
     h+='</div>';
-  }
-  if(chks.summary&&summary&&summary.length){
-    h+='<div class="ps"><div class="pst">製品立ち上げサマリー（'+summary.length+'件）</div>';
-    summary.forEach(function(s,i){
-      h+='<div class="psum">'+
-        '<div style="font-size:11px;font-weight:700;margin-bottom:5px;font-family:monospace">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>'+
-        (s.note?'<div style="font-size:10px;color:#555;line-height:1.7;margin-bottom:5px">'+esc(s.note).replace(/\n/g,'<br>')+'</div>':'')+
-        (s.photos&&s.photos.length?'<div class="pimgs">'+s.photos.slice(0,4).map(function(src){return '<img src="'+src+'">';}).join('')+'</div>':'')+
-      '</div>';
-    });
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
     h+='</div>';
   }
+
+  if(chks.summary&&summary&&summary.length){
+    h+='<div class="p-page">';
+    h+='<div class="p-section"><div class="p-sh">製品立ち上げサマリー（'+summary.length+'件）</div>';
+    summary.forEach(function(s,i){
+      h+='<div class="p-sum">';
+      h+='<div class="p-sum-name">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>';
+      if(s.note)h+='<div class="p-sum-body">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
+      if(s.photos&&s.photos.length)h+='<div class="p-imgs">'+s.photos.slice(0,4).map(function(src){return '<img src="'+src+'">';}).join('')+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='</div>';
+  }
+
   if(chks.issue&&issues&&issues.length){
     var stl={open:'未対応',wip:'対応中',done:'完了'};
-    h+='<div class="ps"><div class="pst">課題リスト（'+issues.length+'件）</div>';
+    h+='<div class="p-page">';
+    h+='<div class="p-section"><div class="p-sh">課題リスト（'+issues.length+'件）</div>';
     issues.forEach(function(iss,i){
-      var bc=iss.status==='done'?'#00e096':iss.status==='wip'?'#ffd166':'#ff4757';
-      h+='<div class="piss" style="border-left:3px solid '+bc+'">'+
-        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'+
-          '<span style="font-family:monospace;font-size:11px;font-weight:700">#'+String(i+1).padStart(2,'0')+'</span>'+
-          '<span style="font-size:11px;font-weight:700">'+esc(iss.title||'（未入力）')+'</span>'+
-          '<span style="font-size:9px;margin-left:auto;font-family:monospace">'+stl[iss.status]+'</span>'+
-        '</div>'+
-        (iss.detail?'<div style="font-size:10px;color:#555;line-height:1.7;margin-bottom:3px">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>':'')+
-        '<div style="font-size:9px;color:#888;font-family:monospace">'+
-          (iss.priority?'優先：'+{'high':'高','mid':'中','low':'低'}[iss.priority]+' ':'')+
-          (iss.due?'期限：'+iss.due+' ':'')+
-          (iss.owner?'担当：'+esc(iss.owner):'')+
-        '</div>'+
+      var lc=iss.status==='done'?'#006633':iss.status==='wip'?'#886600':'#bb1100';
+      h+='<div class="p-iss" style="border-left:3px solid '+lc+';">';
+      h+='<div class="p-iss-hd">';
+      h+='<span class="p-iss-num">#'+String(i+1).padStart(2,'0')+'</span>';
+      h+='<span class="p-iss-title">'+esc(iss.title||'（未入力）')+'</span>';
+      h+='<span class="p-iss-st">'+stl[iss.status]+'</span>';
+      h+='</div>';
+      if(iss.detail)h+='<div class="p-iss-body">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>';
+      h+='<div class="p-iss-meta">'+
+        (iss.priority?'優先：'+{'high':'高','mid':'中','low':'低'}[iss.priority]+'　':'')+
+        (iss.due?'期限：'+iss.due+'　':'')+
+        (iss.owner?'担当：'+esc(iss.owner):'')+
       '</div>';
+      h+='</div>';
     });
     h+='</div>';
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='</div>';
   }
+
   if(chks.action&&actions&&actions.length){
-    h+='<div class="ps"><div class="pst">次回アクション（'+actions.length+'件）</div>';
+    h+='<div class="p-page">';
+    h+='<div class="p-section"><div class="p-sh">次回アクション（'+actions.length+'件）</div>';
     actions.forEach(function(a){
-      h+='<div class="par'+(a.done?' p-action-done':'')+'">'+
+      h+='<div class="p-act">'+
         (a.done?'☑':'☐')+' ['+({'high':'高','mid':'中','low':'低'}[a.pri]||'中')+'] '+esc(a.title)+
         (a.due?' ／ 期限:'+a.due:'')+(a.owner?' ／ 担当:'+esc(a.owner):'')+
       '</div>';
     });
     h+='</div>';
+    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='</div>';
   }
-  h+='<div class="pft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+
   return h;
 }
 
