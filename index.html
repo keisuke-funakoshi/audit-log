@@ -1111,13 +1111,13 @@ function printAgenda(){
   var m=getMeta(), ag=cur.agenda, meta=ag.meta||{};
   var att=ag.attendees||{my:[]};
   var today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
-  var h='<div style="font-family:sans-serif;color:#1a2332;padding:32px;">';
-  h+='<div style="background:#0a1828;color:#fff;padding:28px;border-radius:8px;margin-bottom:20px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">';
+  var h='<div style="font-family:sans-serif;color:#1a2332;padding:32px;background:#fff;">';
+  h+='<div style="background:#fff;border:2px solid #00c8ff;border-radius:8px;padding:24px 28px;margin-bottom:20px;">';
   h+='<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#4a6080;margin-bottom:8px;font-family:monospace">Agenda / 訪問アジェンダ</div>';
-  h+='<div style="font-size:22px;font-weight:700;color:#00c8ff;margin-bottom:14px;">'+esc(m.supName||'訪問先未入力')+'</div>';
+  h+='<div style="font-size:22px;font-weight:700;color:#006688;margin-bottom:14px;">'+esc(m.supName||'訪問先未入力')+'</div>';
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;">';
-  if(meta.date) h+='<div><div style="font-size:8px;letter-spacing:2px;color:#4a6080;font-family:monospace">訪問日</div><div style="color:#d4e4f4;font-size:12px">'+meta.date+(meta.time?' '+meta.time+'〜':'')+'</div></div>';
-  if(meta.place)h+='<div><div style="font-size:8px;letter-spacing:2px;color:#4a6080;font-family:monospace">場所</div><div style="color:#d4e4f4;font-size:12px">'+esc(meta.place)+'</div></div>';
+  if(meta.date) h+='<div><div style="font-size:8px;letter-spacing:2px;color:#4a6080;font-family:monospace">訪問日</div><div style="color:#1a2332;font-size:12px;font-weight:600">'+meta.date+(meta.time?' '+meta.time+'〜':'')+'</div></div>';
+  if(meta.place)h+='<div><div style="font-size:8px;letter-spacing:2px;color:#4a6080;font-family:monospace">場所</div><div style="color:#1a2332;font-size:12px;font-weight:600">'+esc(meta.place)+'</div></div>';
   h+='</div></div>';
   // 訪問目的
   if(meta.purpose){
