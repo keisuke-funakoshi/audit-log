@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AUDIT LOG">
 <meta name="theme-color" content="#00c8ff">
+<meta name="color-scheme" content="light dark">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>工場視察・品質監査</title>
@@ -141,9 +142,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 /* PRINT */
 #printArea{display:none;}
 @media print{
-  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-scheme:light !important;}
+  html,body{background:#ffffff !important;color:#1a2332 !important;color-scheme:light !important;}
   body>*{display:none !important;}
-  #printArea{display:block !important;}
+  #printArea{display:block !important;background:#ffffff !important;color:#1a2332 !important;}
   .p-page{font-family:'Noto Sans JP',sans-serif;font-size:10px;color:#1a2332;background:#ffffff;padding:28px 32px;page-break-after:always;}
   .p-page:last-child{page-break-after:avoid;}
   .p-head{border-bottom:3px solid #00aacc;padding-bottom:16px;margin-bottom:16px;}
@@ -1263,56 +1265,11 @@ function togglePdfChk(key){
   box.textContent=pdfChecks[key]?'✓':'';
 }
 function openPrintWindow(html){
-  var css='body{margin:0;padding:0;background:#ffffff;}'+
-    '.p-page{font-family:\'Helvetica Neue\',Arial,\'Hiragino Kaku Gothic ProN\',\'Meiryo\',sans-serif;font-size:10px;color:#1a2332;background:#ffffff;padding:28px 32px;page-break-after:always;border-bottom:1px solid #dde3ec;margin-bottom:0;}'+
-    '.p-page:last-child{page-break-after:avoid;border-bottom:none;}'+
-    '.p-head{border-bottom:3px solid #00aacc;padding-bottom:16px;margin-bottom:16px;}'+
-    '.p-label{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;margin-bottom:6px;}'+
-    '.p-title{font-size:20px;font-weight:700;color:#004466;margin-bottom:8px;line-height:1.4;}'+
-    '.p-purpose{font-size:12px;color:#5a7a90;margin-bottom:10px;}'+
-    '.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;}'+
-    '.p-ml{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;}'+
-    '.p-mv{font-size:11px;color:#1a2332;font-weight:600;margin-top:2px;}'+
-    '.p-section{margin-bottom:14px;}'+
-    '.p-sh{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;border-bottom:1.5px solid #ccddee;padding-bottom:3px;margin-bottom:8px;}'+
-    '.p-box{background:#eef4f8;padding:8px 12px;border-left:3px solid #00aacc;font-size:10px;line-height:1.8;color:#1a2332;border-radius:0 4px 4px 0;}'+
-    '.p-stats{display:flex;gap:8px;margin-top:8px;}'+
-    '.p-stat{flex:1;text-align:center;background:#eef4f8;border:1px solid #ccddee;border-radius:5px;padding:6px 4px;}'+
-    '.p-stat-n{font-size:16px;font-weight:700;color:#004466;font-family:monospace;line-height:1;}'+
-    '.p-stat-l{font-size:7px;color:#7a9ab0;font-family:monospace;margin-top:2px;}'+
-    '.p-cat{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;padding:3px 0;border-bottom:1px solid #ccddee;margin-top:8px;margin-bottom:3px;}'+
-    '.p-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid #eef0f3;align-items:flex-start;font-size:9px;color:#1a2332;}'+
-    '.p-bdg{font-size:8px;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap;font-family:monospace;flex-shrink:0;}'+
-    '.p-ok{background:#d0f0e0;color:#006633;}'+
-    '.p-ng{background:#fde0e0;color:#bb1100;}'+
-    '.p-na{background:#e8e8e8;color:#666666;}'+
-    '.p-pend{background:#fff0cc;color:#886600;}'+
-    '.p-imgs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;}'+
-    '.p-imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #ccddee;display:block;}'+
-    '.p-proc{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;}'+
-    '.p-proc-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;}'+
-    '.p-proc-note{font-size:10px;color:#334455;line-height:1.7;}'+
-    '.p-iss{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:6px;}'+
-    '.p-iss-hd{display:flex;align-items:center;gap:8px;margin-bottom:4px;}'+
-    '.p-iss-num{font-family:monospace;font-size:11px;font-weight:700;color:#004466;}'+
-    '.p-iss-title{font-size:11px;font-weight:700;color:#1a2332;flex:1;}'+
-    '.p-iss-st{font-size:9px;font-family:monospace;color:#7a9ab0;}'+
-    '.p-iss-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:3px;}'+
-    '.p-iss-meta{font-size:9px;color:#7a9ab0;font-family:monospace;}'+
-    '.p-sum{border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;}'+
-    '.p-sum-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;}'+
-    '.p-sum-body{font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;}'+
-    '.p-act{padding:3px 0;border-bottom:1px solid #eef0f3;font-size:9px;color:#1a2332;}'+
-    '.p-ft{text-align:center;font-size:8px;color:#aabbcc;padding:8px 0;border-top:1px solid #ddeeff;font-family:monospace;margin-top:8px;}'+
-    '.p-ul{margin:0;padding-left:18px;list-style:disc;}'+
-    '.p-ul li{font-size:11px;color:#1a2332;line-height:2;}'+
-    '@media print{body{background:#ffffff;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}';
-  var win=window.open('','_blank');
-  if(!win){toast('ポップアップをブロックされました。ブラウザの設定を確認してください','var(--danger)');return;}
-  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>報告書</title><style>'+css+'</style></head><body>'+html+'</body></html>');
-  win.document.close();
-  win.onload=function(){win.focus();win.print();};
-  setTimeout(function(){if(win&&!win.closed){win.focus();win.print();}},600);
+  var pa=document.getElementById('printArea');
+  pa.innerHTML='<div style="'+
+    'background:#ffffff;color:#1a2332;font-family:Arial,sans-serif;'+
+    'padding:0;margin:0;color-scheme:light;">'+html+'</div>';
+  setTimeout(function(){window.print();},300);
 }
 
 function doPrintSelected(){
@@ -1387,121 +1344,133 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
   var today=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
   var pct=score&&score.pct!==null?score.pct+'%':'—';
   var rank=score&&score.pct!==null?(score.pct>=90?'A+':score.pct>=80?'A':score.pct>=70?'B+':score.pct>=60?'B':'C'):'—';
+  var S={ // inline style shortcuts
+    page:'background:#ffffff;color:#1a2332;font-family:Arial,Helvetica,sans-serif;font-size:10px;padding:28px 32px;page-break-after:always;',
+    head:'border-bottom:3px solid #00aacc;padding-bottom:14px;margin-bottom:14px;',
+    lbl:'font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;margin-bottom:5px;',
+    title:'font-size:20px;font-weight:700;color:#004466;margin-bottom:8px;line-height:1.4;',
+    purp:'font-size:12px;color:#5a7a90;margin-bottom:8px;',
+    grid:'display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;',
+    ml:'font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;',
+    mv:'font-size:11px;color:#1a2332;font-weight:600;margin-top:2px;',
+    sh:'font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;border-bottom:1.5px solid #ccddee;padding-bottom:3px;margin-bottom:8px;',
+    box:'background:#eef4f8;padding:8px 12px;border-left:3px solid #00aacc;font-size:10px;line-height:1.8;color:#1a2332;',
+    stats:'display:flex;gap:7px;margin-top:8px;',
+    stat:'flex:1;text-align:center;background:#eef4f8;border:1px solid #ccddee;border-radius:4px;padding:6px 3px;',
+    statN:'font-size:15px;font-weight:700;color:#004466;font-family:monospace;line-height:1;',
+    statL:'font-size:7px;color:#7a9ab0;font-family:monospace;margin-top:2px;',
+    cat:'font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a9ab0;font-family:monospace;padding:3px 0;border-bottom:1px solid #ccddee;margin-top:8px;margin-bottom:3px;',
+    row:'display:flex;gap:7px;padding:3px 0;border-bottom:1px solid #eef0f3;align-items:flex-start;font-size:9px;color:#1a2332;',
+    ok:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#d0f0e0;color:#006633;',
+    ng:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#fde0e0;color:#bb1100;',
+    na:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#e8e8e8;color:#555;',
+    pend:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#fff0cc;color:#886600;',
+    imgs:'display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;',
+    img:'width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;border:1px solid #ccddee;display:block;',
+    iss:'border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:6px;background:#ffffff;',
+    sum:'border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;background:#ffffff;',
+    ft:'text-align:center;font-size:8px;color:#aabbcc;padding:8px 0;border-top:1px solid #ddeeff;font-family:monospace;margin-top:8px;'
+  };
+  function badge(s){return s==='ok'?'<span style="'+S.ok+'">OK</span>':s==='ng'?'<span style="'+S.ng+'">NG</span>':s==='na'?'<span style="'+S.na+'">N/A</span>':'<span style="'+S.pend+'">未</span>';}
   var h='';
 
   if(chks.home){
-    h+='<div class="p-page">';
-    h+='<div class="p-head">';
-    h+='<div class="p-label">Quality Audit Report</div>';
-    h+='<div class="p-title">'+esc(meta.supName||'（未入力）')+'</div>';
-    if(meta.purpose)h+='<div class="p-purpose">'+esc(meta.purpose)+'</div>';
-    h+='<div class="p-grid">';
-    if(meta.date)    h+='<div><div class="p-ml">訪問日</div><div class="p-mv">'+meta.date+'</div></div>';
-    if(meta.address) h+='<div><div class="p-ml">住所</div><div class="p-mv">'+esc(meta.address)+'</div></div>';
-    if(meta.reporter)h+='<div><div class="p-ml">担当者</div><div class="p-mv">'+esc(meta.reporter)+'</div></div>';
-    if(meta.contact) h+='<div><div class="p-ml">先方担当</div><div class="p-mv">'+esc(meta.contact)+'</div></div>';
-    h+='<div><div class="p-ml">作成日</div><div class="p-mv">'+today+'</div></div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="'+S.head+'">';
+    h+='<div style="'+S.lbl+'">Quality Audit Report</div>';
+    h+='<div style="'+S.title+'">'+esc(meta.supName||'（未入力）')+'</div>';
+    if(meta.purpose)h+='<div style="'+S.purp+'">'+esc(meta.purpose)+'</div>';
+    h+='<div style="'+S.grid+'">';
+    if(meta.date)    h+='<div><div style="'+S.ml+'">訪問日</div><div style="'+S.mv+'">'+meta.date+'</div></div>';
+    if(meta.address) h+='<div><div style="'+S.ml+'">住所</div><div style="'+S.mv+'">'+esc(meta.address)+'</div></div>';
+    if(meta.reporter)h+='<div><div style="'+S.ml+'">担当者</div><div style="'+S.mv+'">'+esc(meta.reporter)+'</div></div>';
+    if(meta.contact) h+='<div><div style="'+S.ml+'">先方担当</div><div style="'+S.mv+'">'+esc(meta.contact)+'</div></div>';
+    h+='<div><div style="'+S.ml+'">作成日</div><div style="'+S.mv+'">'+today+'</div></div>';
     h+='</div></div>';
-    h+='<div class="p-section"><div class="p-sh">総評・概要</div>';
-    h+='<div class="p-box">'+(meta.overall?esc(meta.overall).replace(/\n/g,'<br>'):'（記録なし）')+'</div>';
-    h+='<div class="p-stats">';
-    h+='<div class="p-stat"><div class="p-stat-n">'+pct+'</div><div class="p-stat-l">スコア</div></div>';
-    h+='<div class="p-stat"><div class="p-stat-n">'+rank+'</div><div class="p-stat-l">ランク</div></div>';
-    if(score)h+='<div class="p-stat"><div class="p-stat-n">'+score.ok+'</div><div class="p-stat-l">OK</div></div>';
-    if(score)h+='<div class="p-stat"><div class="p-stat-n">'+score.ng+'</div><div class="p-stat-l">NG</div></div>';
-    h+='<div class="p-stat"><div class="p-stat-n">'+(issues||[]).filter(function(x){return x.status==='open';}).length+'</div><div class="p-stat-l">未対応課題</div></div>';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">総評・概要</div>';
+    h+='<div style="'+S.box+'">'+(meta.overall?esc(meta.overall).replace(/\n/g,'<br>'):'（記録なし）')+'</div>';
+    h+='<div style="'+S.stats+'">';
+    h+='<div style="'+S.stat+'"><div style="'+S.statN+'">'+pct+'</div><div style="'+S.statL+'">スコア</div></div>';
+    h+='<div style="'+S.stat+'"><div style="'+S.statN+'">'+rank+'</div><div style="'+S.statL+'">ランク</div></div>';
+    if(score)h+='<div style="'+S.stat+'"><div style="'+S.statN+'">'+score.ok+'</div><div style="'+S.statL+'">OK</div></div>';
+    if(score)h+='<div style="'+S.stat+'"><div style="'+S.statN+'">'+score.ng+'</div><div style="'+S.statL+'">NG</div></div>';
+    h+='<div style="'+S.stat+'"><div style="'+S.statN+'">'+(issues||[]).filter(function(x){return x.status==='open';}).length+'</div><div style="'+S.statL+'">未対応課題</div></div>';
     h+='</div></div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
+    h+='<div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
     h+='</div>';
   }
 
   if(chks.check&&checklist&&checklist.length){
-    h+='<div class="p-page">';
-    h+='<div class="p-section"><div class="p-sh">チェックリスト</div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">チェックリスト</div>';
     checklist.forEach(function(cat){
-      h+='<div class="p-cat">'+esc(cat.name)+'</div>';
+      h+='<div style="'+S.cat+'">'+esc(cat.name)+'</div>';
       cat.items.forEach(function(it){
-        var b=it.status==='ok'?'<span class="p-bdg p-ok">OK</span>':
-               it.status==='ng'?'<span class="p-bdg p-ng">NG</span>':
-               it.status==='na'?'<span class="p-bdg p-na">N/A</span>':
-               '<span class="p-bdg p-pend">未</span>';
-        h+='<div class="p-row">'+b+'<div>'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#7a9ab0;margin-top:2px;">'+esc(it.note)+'</div>':'')+'</div></div>';
+        h+='<div style="'+S.row+'">'+badge(it.status)+'<div style="color:#1a2332;">'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#7a9ab0;margin-top:2px;">'+esc(it.note)+'</div>':'')+'</div></div>';
         var ph=it.photos||[];
-        if(ph.length)h+='<div class="p-imgs">'+ph.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
+        if(ph.length)h+='<div style="'+S.imgs+'">'+ph.slice(0,4).map(function(s){return '<img src="'+s+'" style="'+S.img+'">';}).join('')+'</div>';
       });
     });
-    h+='</div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
-    h+='</div>';
+    h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   if(chks.proc&&procs&&procs.length){
-    h+='<div class="p-page">';
-    h+='<div class="p-section"><div class="p-sh">設備・工程メモ</div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">設備・工程メモ</div>';
     procs.forEach(function(p,i){
-      h+='<div class="p-proc">';
-      h+='<div class="p-proc-name">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
-      if(p.note)h+='<div class="p-proc-note">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
-      if(p.photos&&p.photos.length)h+='<div class="p-imgs">'+p.photos.slice(0,4).map(function(s){return '<img src="'+s+'">';}).join('')+'</div>';
+      h+='<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;">';
+      h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
+      if(p.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
+      if(p.photos&&p.photos.length)h+='<div style="'+S.imgs+'">'+p.photos.slice(0,4).map(function(s){return '<img src="'+s+'" style="'+S.img+'">';}).join('')+'</div>';
       h+='</div>';
     });
-    h+='</div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
-    h+='</div>';
+    h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   if(chks.summary&&summary&&summary.length){
-    h+='<div class="p-page">';
-    h+='<div class="p-section"><div class="p-sh">製品立ち上げサマリー（'+summary.length+'件）</div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">製品立ち上げサマリー（'+summary.length+'件）</div>';
     summary.forEach(function(s,i){
-      h+='<div class="p-sum">';
-      h+='<div class="p-sum-name">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>';
-      if(s.note)h+='<div class="p-sum-body">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
-      if(s.photos&&s.photos.length)h+='<div class="p-imgs">'+s.photos.slice(0,4).map(function(src){return '<img src="'+src+'">';}).join('')+'</div>';
+      h+='<div style="'+S.sum+'">';
+      h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>';
+      if(s.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
+      if(s.photos&&s.photos.length)h+='<div style="'+S.imgs+'">'+s.photos.slice(0,4).map(function(src){return '<img src="'+src+'" style="'+S.img+'">';}).join('')+'</div>';
       h+='</div>';
     });
-    h+='</div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
-    h+='</div>';
+    h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   if(chks.issue&&issues&&issues.length){
     var stl={open:'未対応',wip:'対応中',done:'完了'};
-    h+='<div class="p-page">';
-    h+='<div class="p-section"><div class="p-sh">課題リスト（'+issues.length+'件）</div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">課題リスト（'+issues.length+'件）</div>';
     issues.forEach(function(iss,i){
       var lc=iss.status==='done'?'#006633':iss.status==='wip'?'#886600':'#bb1100';
-      h+='<div class="p-iss" style="border-left:3px solid '+lc+';">';
-      h+='<div class="p-iss-hd">';
-      h+='<span class="p-iss-num">#'+String(i+1).padStart(2,'0')+'</span>';
-      h+='<span class="p-iss-title">'+esc(iss.title||'（未入力）')+'</span>';
-      h+='<span class="p-iss-st">'+stl[iss.status]+'</span>';
+      h+='<div style="'+S.iss+'border-left:3px solid '+lc+';">';
+      h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">';
+      h+='<span style="font-family:monospace;font-size:11px;font-weight:700;color:#004466;">#'+String(i+1).padStart(2,'0')+'</span>';
+      h+='<span style="font-size:11px;font-weight:700;color:#1a2332;flex:1;">'+esc(iss.title||'（未入力）')+'</span>';
+      h+='<span style="font-size:9px;color:#7a9ab0;font-family:monospace;">'+stl[iss.status]+'</span>';
       h+='</div>';
-      if(iss.detail)h+='<div class="p-iss-body">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>';
-      h+='<div class="p-iss-meta">'+
+      if(iss.detail)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:3px;">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>';
+      h+='<div style="font-size:9px;color:#7a9ab0;font-family:monospace;">'+
         (iss.priority?'優先：'+{'high':'高','mid':'中','low':'低'}[iss.priority]+'　':'')+
-        (iss.due?'期限：'+iss.due+'　':'')+
-        (iss.owner?'担当：'+esc(iss.owner):'')+
-      '</div>';
-      h+='</div>';
+        (iss.due?'期限：'+iss.due+'　':'')+(iss.owner?'担当：'+esc(iss.owner):'')+
+      '</div></div>';
     });
-    h+='</div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
-    h+='</div>';
+    h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   if(chks.action&&actions&&actions.length){
-    h+='<div class="p-page">';
-    h+='<div class="p-section"><div class="p-sh">次回アクション（'+actions.length+'件）</div>';
+    h+='<div style="'+S.page+'">';
+    h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">次回アクション（'+actions.length+'件）</div>';
     actions.forEach(function(a){
-      h+='<div class="p-act">'+
+      h+='<div style="padding:3px 0;border-bottom:1px solid #eef0f3;font-size:9px;color:#1a2332;">'+
         (a.done?'☑':'☐')+' ['+({'high':'高','mid':'中','low':'低'}[a.pri]||'中')+'] '+esc(a.title)+
         (a.due?' ／ 期限:'+a.due:'')+(a.owner?' ／ 担当:'+esc(a.owner):'')+
       '</div>';
     });
-    h+='</div>';
-    h+='<div class="p-ft">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div>';
-    h+='</div>';
+    h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   return h;
