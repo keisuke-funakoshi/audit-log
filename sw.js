@@ -1,7 +1,8 @@
-const CACHE = 'audit-log-v1';
+const CACHE = 'audit-log-v6';
 const FILES = [
   './',
-  './index.html'
+  './index.html',
+  './print.html'
 ];
 
 self.addEventListener('install', function(e){
