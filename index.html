@@ -1268,33 +1268,30 @@ function openPrintWindow(html){
   var pa=document.getElementById('printArea');
   pa.innerHTML=html;
 
-  // 既存のスタイルタグを削除
   var old=document.getElementById('printForceStyle');
   if(old)old.parentNode.removeChild(old);
 
   var styleEl=document.createElement('style');
   styleEl.id='printForceStyle';
-  styleEl.textContent=[
-    '@media print{',
-    '  html,body{background:#ffffff!important;color:#1a2332!important;color-scheme:light!important;}',
-    '  body>*:not(#printArea){display:none!important;}',
-    '  #printArea{display:block!important;background:#ffffff!important;color:#1a2332!important;}',
-    '  #printArea div,#printArea p,#printArea span,#printArea li{',
-    '    background:#ffffff!important;color:#1a2332!important;',
-    '  }',
-    '  #printArea img{background:transparent!important;}',
-    '}'
-  ].join('');
+  styleEl.textContent=
+    '@media print{'+
+    'html,body{background:#ffffff!important;color:#1a2332!important;color-scheme:light!important;}'+
+    'body>*:not(#printArea){display:none!important;}'+
+    '#printArea{display:block!important;background:#ffffff!important;color:#1a2332!important;}'+
+    '#printArea div,#printArea p,#printArea span,#printArea li,#printArea td{background:#ffffff!important;color:#1a2332!important;}'+
+    '#printArea img{background:transparent!important;}'+
+    '}';
   document.head.appendChild(styleEl);
 
+  // スマホは描画に時間がかかるため1秒待つ
   setTimeout(function(){
     window.print();
     setTimeout(function(){
       var s=document.getElementById('printForceStyle');
       if(s)s.parentNode.removeChild(s);
       pa.innerHTML='';
-    },2000);
-  },300);
+    },3000);
+  },1000);
 }
 
 function doPrintSelected(){

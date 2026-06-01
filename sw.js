@@ -1,4 +1,4 @@
-const CACHE = 'audit-log-v6';
+const CACHE = 'audit-log-v10';
 const FILES = [
   './',
   './index.html',
