@@ -1265,11 +1265,48 @@ function togglePdfChk(key){
   box.textContent=pdfChecks[key]?'✓':'';
 }
 function openPrintWindow(html){
-  var pa=document.getElementById('printArea');
-  pa.innerHTML='<div style="'+
-    'background:#ffffff;color:#1a2332;font-family:Arial,sans-serif;'+
-    'padding:0;margin:0;color-scheme:light;">'+html+'</div>';
-  setTimeout(function(){window.print();},300);
+  // 完全に独立した白いHTMLをBlobで生成してiframeで印刷
+  var fullHtml='<!DOCTYPE html>'+
+'<html><head>'+
+'<meta charset="UTF-8">'+
+'<meta name="color-scheme" content="light">'+
+'<meta name="viewport" content="width=device-width,initial-scale=1">'+
+'<style>'+
+'*{box-sizing:border-box;margin:0;padding:0;}'+
+'html,body{background:#ffffff!important;color:#1a2332!important;font-family:Arial,Helvetica,sans-serif;font-size:10px;color-scheme:light!important;}'+
+'@media print{html,body{background:#ffffff!important;color:#1a2332!important;}}'+
+'</style>'+
+'</head><body style="background:#ffffff;color:#1a2332;color-scheme:light;">'+
+html+
+'</body></html>';
+
+  var blob=new Blob([fullHtml],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+
+  // iframeを使って印刷（スマホSafari/Edge対応）
+  var existing=document.getElementById('printIframe');
+  if(existing)existing.parentNode.removeChild(existing);
+
+  var iframe=document.createElement('iframe');
+  iframe.id='printIframe';
+  iframe.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:9999;background:#ffffff;';
+  iframe.src=url;
+  document.body.appendChild(iframe);
+
+  iframe.onload=function(){
+    try{
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }catch(e){
+      // fallback: 直接開く
+      window.open(url,'_blank');
+    }
+    // 印刷後5秒でiframeを除去
+    setTimeout(function(){
+      if(iframe.parentNode)iframe.parentNode.removeChild(iframe);
+      URL.revokeObjectURL(url);
+    },5000);
+  };
 }
 
 function doPrintSelected(){
