@@ -512,28 +512,59 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
   </div>
 </div>
 
-<!-- ===== MODAL: 写真サイズ選択 ===== -->
-<div class="modal" id="photoSizeModal">
+<!-- ===== MODAL: 写真追加 ===== -->
+<div class="modal" id="photoAddModal">
   <div class="modal-hdr" style="background:rgba(10,14,20,.97)">
-    <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);flex:1">📷 写真サイズを選択</span>
+    <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);flex:1">📷 写真を追加</span>
+    <button onclick="cancelPhotoAdd()" class="back-btn" style="font-size:13px;width:auto;padding:0 10px;">閉じる</button>
   </div>
   <div style="overflow-y:auto;flex:1;padding:16px;display:flex;flex-direction:column;gap:10px">
-    <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">追加する写真のサイズを選んでください</div>
-    <button onclick="selectPhotoSize('high')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--text);text-align:left;cursor:pointer;">
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px">🔴 高画質</div>
-      <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">最大1200px・品質80%　約500KB〜1MB</div>
-    </button>
-    <button onclick="selectPhotoSize('mid')" style="background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:16px;color:var(--text);text-align:left;cursor:pointer;">
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:var(--accent)">🟡 標準（推奨）</div>
-      <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">最大800px・品質70%　約200KB前後</div>
-    </button>
-    <button onclick="selectPhotoSize('low')" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--text);text-align:left;cursor:pointer;">
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px">🟢 軽量</div>
-      <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">最大500px・品質55%　約50〜100KB</div>
-    </button>
-    <button onclick="cancelPhotoSize()" style="background:transparent;border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--muted);cursor:pointer;font-family:var(--mono);font-size:12px;">
-      キャンセル
-    </button>
+    <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">画質を選んでから写真を選択してください</div>
+    <!-- 高画質 -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;margin-bottom:3px">🔴 高画質</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">最大1200px・約500KB〜1MB</div>
+      </div>
+      <div style="display:flex;">
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;border-right:1px solid var(--border);font-size:12px;color:var(--accent)">
+          🖼 ライブラリ<input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoAdd(this,'high')">
+        </label>
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;font-size:12px;color:var(--accent)">
+          📷 カメラ<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoAdd(this,'high')">
+        </label>
+      </div>
+    </div>
+    <!-- 標準 -->
+    <div style="background:var(--card);border:2px solid var(--accent);border-radius:12px;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;margin-bottom:3px;color:var(--accent)">🟡 標準（推奨）</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">最大800px・約200KB前後</div>
+      </div>
+      <div style="display:flex;">
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;border-right:1px solid var(--border);font-size:12px;color:var(--accent)">
+          🖼 ライブラリ<input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoAdd(this,'mid')">
+        </label>
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;font-size:12px;color:var(--accent)">
+          📷 カメラ<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoAdd(this,'mid')">
+        </label>
+      </div>
+    </div>
+    <!-- 軽量 -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;margin-bottom:3px">🟢 軽量</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">最大500px・約50〜100KB</div>
+      </div>
+      <div style="display:flex;">
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;border-right:1px solid var(--border);font-size:12px;color:var(--accent)">
+          🖼 ライブラリ<input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoAdd(this,'low')">
+        </label>
+        <label style="flex:1;padding:11px;text-align:center;cursor:pointer;font-size:12px;color:var(--accent)">
+          📷 カメラ<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoAdd(this,'low')">
+        </label>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1574,28 +1605,30 @@ function statBox(n,lbl,col,bg,bc){
     '<div style="font-family:var(--mono);font-size:18px;color:'+col+'">'+n+'</div>'+
     '<div style="font-size:9px;color:var(--muted)">'+lbl+'</div></div>';
 }
-// ===== 写真サイズ選択モーダル =====
-var _pendingFiles=null, _pendingOnAdd=null;
+// ===== 写真追加モーダル =====
+var _pendingOnAdd=null;
 
-function showPhotoSizeModal(files, onAdd){
-  _pendingFiles=files;
+function showPhotoAddModal(onAdd){
   _pendingOnAdd=onAdd;
-  document.getElementById('photoSizeModal').classList.add('open');
+  document.getElementById('photoAddModal').classList.add('open');
 }
-function selectPhotoSize(level){
-  document.getElementById('photoSizeModal').classList.remove('open');
-  if(!_pendingFiles||!_pendingOnAdd)return;
+function cancelPhotoAdd(){
+  document.getElementById('photoAddModal').classList.remove('open');
+  _pendingOnAdd=null;
+}
+function handlePhotoAdd(input,level){
+  var files=Array.from(input.files);
+  input.value='';
+  document.getElementById('photoAddModal').classList.remove('open');
+  if(!files.length||!_pendingOnAdd)return;
+  var onAdd=_pendingOnAdd;
+  _pendingOnAdd=null;
   var cfg={
     high:{maxSize:1200,quality:0.80,target:800*1024},
     mid: {maxSize:800, quality:0.70,target:200*1024},
     low: {maxSize:500, quality:0.55,target:80*1024}
   }[level];
-  compressImagesWithConfig(_pendingFiles,cfg,_pendingOnAdd);
-  _pendingFiles=null;_pendingOnAdd=null;
-}
-function cancelPhotoSize(){
-  document.getElementById('photoSizeModal').classList.remove('open');
-  _pendingFiles=null;_pendingOnAdd=null;
+  compressImagesWithConfig(files,cfg,onAdd);
 }
 
 function compressImagesWithConfig(files,cfg,cb){
@@ -1697,20 +1730,13 @@ function buildPhotoGrid(gridId,sz,photos,onAdd,onDel){
     w.innerHTML='<img src="'+src+'"><button class="idel" onclick="('+onDel.toString()+')('+i+')">✕</button>';
     grid.appendChild(w);
   });
-  var lib=document.createElement('label');lib.className='aph';
-  lib.innerHTML='<span style="font-size:20px">🖼</span><span>ライブラリ</span><input type="file" accept="image/*" multiple>';
-  lib.querySelector('input').onchange=function(){
-    var files=Array.from(this.files);this.value='';
-    if(files.length)showPhotoSizeModal(files,onAdd);
-  };
-  grid.appendChild(lib);
-  var cam=document.createElement('label');cam.className='aph';
-  cam.innerHTML='<span style="font-size:20px">📷</span><span>カメラ</span><input type="file" accept="image/*" capture="environment">';
-  cam.querySelector('input').onchange=function(){
-    var files=Array.from(this.files);this.value='';
-    if(files.length)showPhotoSizeModal(files,onAdd);
-  };
-  grid.appendChild(cam);
+  // 写真追加ボタン（モーダル経由）
+  var addBtn=document.createElement('div');
+  addBtn.className='aph';
+  addBtn.style.cursor='pointer';
+  addBtn.innerHTML='<span style="font-size:22px">📷</span><span>写真追加</span>';
+  addBtn.addEventListener('click',function(){showPhotoAddModal(onAdd);});
+  grid.appendChild(addBtn);
 }
 
 // ===== DEFAULT CHECKLIST =====
