@@ -1265,42 +1265,36 @@ function togglePdfChk(key){
   box.textContent=pdfChecks[key]?'✓':'';
 }
 function openPrintWindow(html){
-  // アプリ全体のスタイルを一時的に白に切り替えて印刷
   var pa=document.getElementById('printArea');
   pa.innerHTML=html;
 
-  // 全要素のダークスタイルを無効化
+  // 既存のスタイルタグを削除
+  var old=document.getElementById('printForceStyle');
+  if(old)old.parentNode.removeChild(old);
+
   var styleEl=document.createElement('style');
   styleEl.id='printForceStyle';
-  styleEl.textContent=
-    'html,body{background:#ffffff!important;color:#1a2332!important;color-scheme:light!important;}'+
-    '#printArea{display:block!important;position:fixed!important;top:0!important;left:0!important;'+
-    'width:100%!important;height:auto!important;min-height:100%!important;'+
-    'background:#ffffff!important;color:#1a2332!important;z-index:999999!important;'+
-    'padding:0!important;margin:0!important;color-scheme:light!important;}'+
-    '#printArea *{background:#ffffff!important;color:#1a2332!important;color-scheme:light!important;}'+
-    '#printArea img{background:transparent!important;}'+
-    '#printArea [style*="background:#d0f0e0"]{background:#d0f0e0!important;}'+
-    '#printArea [style*="background:#fde0e0"]{background:#fde0e0!important;}'+
-    '#printArea [style*="background:#e8e8e8"]{background:#e8e8e8!important;}'+
-    '#printArea [style*="background:#fff0cc"]{background:#fff0cc!important;}'+
-    '#printArea [style*="background:#eef4f8"]{background:#eef4f8!important;}'+
-    '#printArea [style*="color:#006633"]{color:#006633!important;}'+
-    '#printArea [style*="color:#bb1100"]{color:#bb1100!important;}'+
-    '#printArea [style*="color:#004466"]{color:#004466!important;}'+
-    '#printArea [style*="color:#7a9ab0"]{color:#7a9ab0!important;}'+
-    'body>*:not(#printArea){display:none!important;}';
+  styleEl.textContent=[
+    '@media print{',
+    '  html,body{background:#ffffff!important;color:#1a2332!important;color-scheme:light!important;}',
+    '  body>*:not(#printArea){display:none!important;}',
+    '  #printArea{display:block!important;background:#ffffff!important;color:#1a2332!important;}',
+    '  #printArea div,#printArea p,#printArea span,#printArea li{',
+    '    background:#ffffff!important;color:#1a2332!important;',
+    '  }',
+    '  #printArea img{background:transparent!important;}',
+    '}'
+  ].join('');
   document.head.appendChild(styleEl);
 
   setTimeout(function(){
     window.print();
-    // 印刷ダイアログを閉じた後に元に戻す
     setTimeout(function(){
       var s=document.getElementById('printForceStyle');
       if(s)s.parentNode.removeChild(s);
       pa.innerHTML='';
-    },1000);
-  },400);
+    },2000);
+  },300);
 }
 
 function doPrintSelected(){
