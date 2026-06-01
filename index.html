@@ -1673,58 +1673,6 @@ function compressImagesWithConfig(files,cfg,cb){
     r.readAsDataURL(file);
   });
 }
-  var results=[],done=0;
-  if(!files.length){cb([]);return;}
-  toast('画像を圧縮中…','#3a7bd5');
-  files.forEach(function(file){
-    var r=new FileReader();
-    r.onload=function(e){
-      var img=new Image();
-      img.onload=function(){
-        // 目標：200KB以下になるまで段階的に圧縮
-        var TARGET=200*1024; // 200KB
-        var w=img.width,h=img.height;
-        // まず800pxに縮小
-        var maxSize=800;
-        if(w>maxSize||h>maxSize){
-          var ratio=Math.min(maxSize/w,maxSize/h);
-          w=Math.round(w*ratio);
-          h=Math.round(h*ratio);
-        }
-        var c=document.createElement('canvas');
-        c.width=w;c.height=h;
-        c.getContext('2d').drawImage(img,0,0,w,h);
-        // 品質を下げながら目標サイズに収める
-        var q=0.7;
-        var dataUrl=c.toDataURL('image/jpeg',q);
-        // Base64のサイズチェック（Base64は実際より約33%大きい）
-        var approxBytes=(dataUrl.length-'data:image/jpeg;base64,'.length)*0.75;
-        while(approxBytes>TARGET&&q>0.3){
-          q=Math.round((q-0.1)*10)/10;
-          dataUrl=c.toDataURL('image/jpeg',q);
-          approxBytes=(dataUrl.length-'data:image/jpeg;base64,'.length)*0.75;
-        }
-        // まだ大きければ解像度も落とす
-        if(approxBytes>TARGET){
-          var scale=Math.sqrt(TARGET/approxBytes);
-          c.width=Math.round(w*scale);
-          c.height=Math.round(h*scale);
-          c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-          dataUrl=c.toDataURL('image/jpeg',0.5);
-        }
-        results.push(dataUrl);
-        done++;
-        if(done===files.length){
-          var kb=Math.round((dataUrl.length*0.75)/1024);
-          toast('写真を追加しました（約'+kb+'KB）');
-          cb(results);
-        }
-      };
-      img.src=e.target.result;
-    };
-    r.readAsDataURL(file);
-  });
-}
 function buildPhotoGrid(gridId,sz,photos,onAdd,onDel){
   var grid=document.getElementById(gridId);if(!grid)return;
   grid.innerHTML='';grid.className='ig '+sz;
