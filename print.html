@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>印刷</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+html,body{
+  background:#ffffff !important;
+  color:#1a2332 !important;
+  font-family:Arial,Helvetica,'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+  font-size:10px;
+  color-scheme:light !important;
+}
+@media print{
+  html,body{background:#ffffff !important;color:#1a2332 !important;}
+}
+</style>
+</head>
+<body style="background:#ffffff;color:#1a2332;">
+<div id="content" style="background:#ffffff;color:#1a2332;padding:0;"></div>
+<script>
+// 親ページからデータを受け取る
+window.addEventListener('message',function(e){
+  var div=document.getElementById('content');
+  div.innerHTML=e.data;
+  setTimeout(function(){window.print();},400);
+},{once:true});
+
+// 読み込み完了を親に通知
+window.onload=function(){
+  if(window.opener) window.opener.postMessage('ready','*');
+};
+</script>
+</body>
+</html>
