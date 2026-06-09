@@ -171,8 +171,9 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
   .p-ng{background:#fde0e0;color:#bb1100;}
   .p-na{background:#e8e8e8;color:#666666;}
   .p-pend{background:#fff0cc;color:#886600;}
-  .p-imgs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;page-break-inside:avoid;break-inside:avoid;}
-  .p-imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #ccddee;display:block;max-height:180px;}
+  .p-imgs{width:100%;border-collapse:collapse;padding:5px 0;page-break-inside:avoid;break-inside:avoid;}
+  .p-imgs td{width:25%;padding:2px;vertical-align:top;}
+  .p-imgs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:1px solid #ccddee;display:block;max-height:150px;}
   .p-proc{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;}
   .p-proc-name{font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;}
   .p-proc-note{font-size:10px;color:#334455;line-height:1.7;}
@@ -1535,8 +1536,8 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
     ng:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#fde0e0;color:#bb1100;',
     na:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#e8e8e8;color:#555;',
     pend:'font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;font-family:monospace;background:#fff0cc;color:#886600;',
-    imgs:'display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px 0;page-break-inside:avoid;break-inside:avoid;',
-    img:'width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;border:1px solid #ccddee;display:block;max-height:180px;',
+    imgs:'width:100%;border-collapse:collapse;padding:5px 0;page-break-inside:avoid;break-inside:avoid;',
+    img:'width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;border:1px solid #ccddee;display:block;max-height:150px;',
     iss:'border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:6px;background:#ffffff;page-break-inside:avoid;break-inside:avoid;',
     sum:'border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;background:#ffffff;page-break-inside:avoid;break-inside:avoid;',
     ft:'text-align:center;font-size:8px;color:#aabbcc;padding:8px 0;border-top:1px solid #ddeeff;font-family:monospace;margin-top:8px;'
@@ -1579,9 +1580,9 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
         var ph=it.photos||[];
         h+='<div style="page-break-inside:avoid;break-inside:avoid;">';
         h+='<div style="'+S.row+'">'+badge(it.status)+'<div style="color:#1a2332;">'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#7a9ab0;margin-top:2px;">'+esc(it.note)+'</div>':'')+'</div></div>';
-        if(ph.length)h+='<div style="'+S.imgs+'">'+ph.slice(0,4).map(function(p){
-          return '<div style="text-align:center"><img src="'+pSrc(p)+'" style="'+S.img+'">'+(pCmt(p)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;">'+esc(pCmt(p))+'</div>':'')+'</div>';
-        }).join('')+'</div>';
+        if(ph.length)h+='<table style="'+S.imgs+'"><tr>'+ph.slice(0,4).map(function(p){
+          return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(p)+'" style="'+S.img+'">'+(pCmt(p)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(p))+'</div>':'')+'</td>';
+        }).join('')+'</tr></table>';
         h+='</div>';
       });
     });
@@ -1595,9 +1596,9 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
       h+='<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;page-break-inside:avoid;break-inside:avoid;">';
       h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
       if(p.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
-      if(p.photos&&p.photos.length)h+='<div style="'+S.imgs+'">'+p.photos.slice(0,4).map(function(ph){
-        return '<div style="text-align:center"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;">'+esc(pCmt(ph))+'</div>':'')+'</div>';
-      }).join('')+'</div>';
+      if(p.photos&&p.photos.length)h+='<table style="'+S.imgs+'"><tr>'+p.photos.slice(0,4).map(function(ph){
+        return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(ph))+'</div>':'')+'</td>';
+      }).join('')+'</tr></table>';
       h+='</div>';
     });
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
@@ -1610,9 +1611,9 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
       h+='<div style="'+S.sum+'">';
       h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>';
       if(s.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
-      if(s.photos&&s.photos.length)h+='<div style="'+S.imgs+'">'+s.photos.slice(0,4).map(function(ph){
-        return '<div style="text-align:center"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;">'+esc(pCmt(ph))+'</div>':'')+'</div>';
-      }).join('')+'</div>';
+      if(s.photos&&s.photos.length)h+='<table style="'+S.imgs+'"><tr>'+s.photos.slice(0,4).map(function(ph){
+        return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(ph))+'</div>':'')+'</td>';
+      }).join('')+'</tr></table>';
       h+='</div>';
     });
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
