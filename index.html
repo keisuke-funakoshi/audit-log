@@ -1576,15 +1576,17 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
     h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">チェックリスト</div>';
     checklist.forEach(function(cat){
       h+='<div style="'+S.cat+'">'+esc(cat.name)+'</div>';
+      h+='<table style="width:100%;border-collapse:collapse;">';
       cat.items.forEach(function(it){
         var ph=it.photos||[];
-        h+='<div style="page-break-inside:avoid;break-inside:avoid;">';
+        h+='<tr style="page-break-inside:avoid;break-inside:avoid;"><td style="padding:2px 0;">';
         h+='<div style="'+S.row+'">'+badge(it.status)+'<div style="color:#1a2332;">'+esc(it.label)+(it.note?'<div style="font-size:8px;color:#7a9ab0;margin-top:2px;">'+esc(it.note)+'</div>':'')+'</div></div>';
         if(ph.length)h+='<table style="'+S.imgs+'"><tr>'+ph.slice(0,4).map(function(p){
           return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(p)+'" style="'+S.img+'">'+(pCmt(p)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(p))+'</div>':'')+'</td>';
         }).join('')+'</tr></table>';
-        h+='</div>';
+        h+='</td></tr>';
       });
+      h+='</table>';
     });
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
@@ -1592,30 +1594,34 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
   if(chks.proc&&procs&&procs.length){
     h+='<div style="'+S.page+'">';
     h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">設備・工程メモ</div>';
+    h+='<table style="width:100%;border-collapse:collapse;">';
     procs.forEach(function(p,i){
-      h+='<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f3;page-break-inside:avoid;break-inside:avoid;">';
+      h+='<tr style="page-break-inside:avoid;break-inside:avoid;"><td style="padding-bottom:8px;border-bottom:1px solid #eef0f3;padding-top:4px;">';
       h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:3px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(p.name||'（未入力）')+'</div>';
       if(p.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;">'+esc(p.note).replace(/\n/g,'<br>')+'</div>';
       if(p.photos&&p.photos.length)h+='<table style="'+S.imgs+'"><tr>'+p.photos.slice(0,4).map(function(ph){
         return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(ph))+'</div>':'')+'</td>';
       }).join('')+'</tr></table>';
-      h+='</div>';
+      h+='</td></tr>';
     });
+    h+='</table>';
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
   if(chks.summary&&summary&&summary.length){
     h+='<div style="'+S.page+'">';
     h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">製品立ち上げサマリー（'+summary.length+'件）</div>';
+    h+='<table style="width:100%;border-collapse:collapse;">';
     summary.forEach(function(s,i){
-      h+='<div style="'+S.sum+'">';
+      h+='<tr style="page-break-inside:avoid;break-inside:avoid;"><td style="border:1px solid #ccddee;border-radius:4px;padding:7px 10px;margin-bottom:7px;background:#ffffff;">';
       h+='<div style="font-size:11px;font-weight:700;color:#004466;margin-bottom:4px;font-family:monospace;">'+String(i+1).padStart(2,'0')+' '+esc(s.title||'（未入力）')+'</div>';
       if(s.note)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:4px;">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
       if(s.photos&&s.photos.length)h+='<table style="'+S.imgs+'"><tr>'+s.photos.slice(0,4).map(function(ph){
         return '<td style="width:25%;padding:2px;vertical-align:top;"><img src="'+pSrc(ph)+'" style="'+S.img+'">'+(pCmt(ph)?'<div style="font-size:7px;color:#7a9ab0;margin-top:2px;text-align:center;">'+esc(pCmt(ph))+'</div>':'')+'</td>';
       }).join('')+'</tr></table>';
-      h+='</div>';
+      h+='</td></tr><tr><td style="height:7px;"></td></tr>';
     });
+    h+='</table>';
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
@@ -1623,9 +1629,10 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
     var stl={open:'未対応',wip:'対応中',done:'完了'};
     h+='<div style="'+S.page+'">';
     h+='<div style="margin-bottom:12px"><div style="'+S.sh+'">課題リスト（'+issues.length+'件）</div>';
+    h+='<table style="width:100%;border-collapse:collapse;">';
     issues.forEach(function(iss,i){
       var lc=iss.status==='done'?'#006633':iss.status==='wip'?'#886600':'#bb1100';
-      h+='<div style="'+S.iss+'border-left:3px solid '+lc+';">';
+      h+='<tr style="page-break-inside:avoid;break-inside:avoid;"><td style="border:1px solid #ccddee;border-left:3px solid '+lc+';border-radius:4px;padding:7px 10px;background:#ffffff;">';
       h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">';
       h+='<span style="font-family:monospace;font-size:11px;font-weight:700;color:#004466;">#'+String(i+1).padStart(2,'0')+'</span>';
       h+='<span style="font-size:11px;font-weight:700;color:#1a2332;flex:1;">'+esc(iss.title||'（未入力）')+'</span>';
@@ -1635,8 +1642,9 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
       h+='<div style="font-size:9px;color:#7a9ab0;font-family:monospace;">'+
         (iss.priority?'優先：'+{'high':'高','mid':'中','low':'低'}[iss.priority]+'　':'')+
         (iss.due?'期限：'+iss.due+'　':'')+(iss.owner?'担当：'+esc(iss.owner):'')+
-      '</div></div>';
+      '</div></td></tr><tr><td style="height:6px;"></td></tr>';
     });
+    h+='</table>';
     h+='</div><div style="'+S.ft+'">AUDIT LOG &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; '+esc(meta.supName||'')+'</div></div>';
   }
 
