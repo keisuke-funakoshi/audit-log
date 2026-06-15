@@ -301,7 +301,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 </div>
 
 <!-- ===== SUMMARY ===== -->
-<div class="screen" id="scr-summary" style="display:none!important"></div>
+<div id="scr-summary" style="display:none!important"></div>
 
 <!-- ===== AGENDA ===== -->
 <div class="screen" id="scr-agenda">
@@ -387,7 +387,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
   <div style="height:20px"></div>
 
 
-<div class="screen" id="scr-action" style="display:none!important"></div>
+<div id="scr-action" style="display:none!important"></div>
 
 <!-- ===== EXPORT ===== -->
 <div class="screen" id="scr-export">
@@ -710,11 +710,15 @@ var TAB_IDS = {
 // タブの即時切り替え（視覚のみ）
 function switchTabVisual(name){
   Object.keys(SCREEN_IDS).forEach(function(k){
-    document.getElementById(SCREEN_IDS[k]).classList.remove('active');
-    document.getElementById(TAB_IDS[k]).classList.remove('active');
+    var sc=document.getElementById(SCREEN_IDS[k]);
+    var tb=document.getElementById(TAB_IDS[k]);
+    if(sc)sc.classList.remove('active');
+    if(tb)tb.classList.remove('active');
   });
-  document.getElementById(SCREEN_IDS[name]).classList.add('active');
-  document.getElementById(TAB_IDS[name]).classList.add('active');
+  var sc=document.getElementById(SCREEN_IDS[name]);
+  var tb=document.getElementById(TAB_IDS[name]);
+  if(sc)sc.classList.add('active');
+  if(tb)tb.classList.add('active');
 }
 
 // 描画処理（遅延実行）
