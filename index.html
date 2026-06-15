@@ -931,7 +931,23 @@ function renderProcMPhotos(){
 }
 
 // ===== ISSUE =====
-function addIssue(){cur.issues.push({id:Date.now(),title:'',detail:'',decision:'',actionText:'',actionOwner:'',actionDue:'',photos:[],status:'open',priority:'high',due:'',owner:''});saveLS();renderIssues();}
+function addIssue(){cur.issues.push({id:Date.now(),title:'',detail:'',decision:'',issActions:[],photos:[],status:'open',priority:'high'});saveLS();renderIssues();}
+function addIssueAction(issId){
+  var iss=cur.issues.find(function(x){return x.id==issId;});if(!iss)return;
+  if(!iss.issActions)iss.issActions=[];
+  iss.issActions.push({id:Date.now(),text:'',owner:'',due:''});
+  saveLS();renderIssues();
+}
+function deleteIssueAction(issId,actId){
+  var iss=cur.issues.find(function(x){return x.id==issId;});if(!iss)return;
+  iss.issActions=iss.issActions.filter(function(a){return a.id!=actId;});
+  saveLS();renderIssues();
+}
+function updateIssueAction(issId,actId,field,val){
+  var iss=cur.issues.find(function(x){return x.id==issId;});if(!iss)return;
+  var a=iss.issActions.find(function(a){return a.id==actId;});if(!a)return;
+  a[field]=val;saveLS();
+}
 function deleteIssue(id){
   var x=cur.issues.find(function(i){return i.id==id;});
   if(!confirm('「'+(x&&x.title||'この課題')+'」を削除しますか？'))return;
@@ -966,12 +982,24 @@ function renderIssues(){
       '<div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--mono);letter-spacing:1px">決定事項</div>'+
       '<textarea class="fta" style="min-height:44px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:10px" placeholder="決定事項・対応方針…" oninput="updateIssue(\''+iss.id+'\',\'decision\',this.value)">'+esc(iss.decision||'')+'</textarea>'+
       // ④ アクション
-      '<div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--mono);letter-spacing:1px">アクション</div>'+
-      '<textarea class="fta" style="min-height:44px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:6px" placeholder="アクション内容…" oninput="updateIssue(\''+iss.id+'\',\'actionText\',this.value)">'+esc(iss.actionText||'')+'</textarea>'+
-      '<div style="display:flex;gap:6px;margin-bottom:10px">'+
-        '<input class="fi" style="flex:1" type="text" placeholder="担当者" value="'+esc(iss.actionOwner||'')+'" oninput="updateIssue(\''+iss.id+'\',\'actionOwner\',this.value)">'+
-        '<input class="fi" style="flex:1;color-scheme:dark" type="date" value="'+esc(iss.actionDue||'')+'" onchange="updateIssue(\''+iss.id+'\',\'actionDue\',this.value)">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+
+        '<div style="font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:1px">アクション</div>'+
+        '<button onclick="addIssueAction(\''+iss.id+'\')" style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:var(--accent);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:var(--mono)">＋ 追加</button>'+
       '</div>'+
+      ((iss.issActions&&iss.issActions.length)?
+        iss.issActions.map(function(a){
+          return '<div style="background:var(--card2);border-radius:8px;padding:7px 10px;margin-bottom:6px;border:1px solid var(--border)">'+
+            '<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">'+
+              '<input class="fi" style="flex:1;font-size:12px" type="text" placeholder="アクション内容" value="'+esc(a.text||'')+'" oninput="updateIssueAction(\''+iss.id+'\',\''+a.id+'\',\'text\',this.value)">'+
+              '<button onclick="deleteIssueAction(\''+iss.id+'\',\''+a.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0 4px">🗑</button>'+
+            '</div>'+
+            '<div style="display:flex;gap:6px">'+
+              '<input class="fi" style="flex:1;font-size:11px" type="text" placeholder="担当者" value="'+esc(a.owner||'')+'" oninput="updateIssueAction(\''+iss.id+'\',\''+a.id+'\',\'owner\',this.value)">'+
+              '<input class="fi" style="flex:1;font-size:11px;color-scheme:dark" type="date" value="'+esc(a.due||'')+'" onchange="updateIssueAction(\''+iss.id+'\',\''+a.id+'\',\'due\',this.value)">'+
+            '</div>'+
+          '</div>';
+        }).join('')
+      :'<div style="font-size:11px;color:var(--muted);padding:6px 0 10px">＋ 追加ボタンでアクションを登録</div>')+
       // ⑤ ステータス・優先度
       '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+
         '<select class="isel" onchange="updateIssue(\''+iss.id+'\',\'status\',this.value)">'+
