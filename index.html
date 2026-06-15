@@ -301,7 +301,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 </div>
 
 <!-- ===== SUMMARY ===== -->
-<div id="scr-summary" style="display:none!important"></div>
+<div class="screen" id="scr-summary"></div>
 
 <!-- ===== AGENDA ===== -->
 <div class="screen" id="scr-agenda">
@@ -344,22 +344,19 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
     <button class="big-btn" style="margin-bottom:8px" onclick="copyAgenda()">📋 &nbsp;アジェンダをコピー（メール送付用）</button>
     <button class="big-btn" style="margin-bottom:8px;background:linear-gradient(135deg,#005500,#00aa44)" onclick="printAgenda()">🖨 &nbsp;アジェンダをPDF印刷</button>
   </div>
-  <div style="height:10px"></div>
 
-  <!-- ===== サマリーセクション ===== -->
-  <div style="padding:0 13px">
-    <div style="border-top:2px solid var(--border);margin:4px 0 12px"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+  <!-- ===== サマリーセクション（統合） ===== -->
+  <div style="padding:0 13px;margin-top:4px">
+    <div style="border-top:2px solid var(--border);padding-top:12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
       <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted)">LAUNCH SUMMARY</span>
       <button class="ibtn" onclick="addSum()">＋ 事象追加</button>
     </div>
     <div id="sumList"></div>
   </div>
 
-  <!-- ===== アクションセクション ===== -->
-  <div style="padding:0 13px">
-    <div style="border-top:2px solid var(--border);margin:12px 0 12px"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+  <!-- ===== アクションセクション（統合） ===== -->
+  <div style="padding:0 13px;margin-top:4px">
+    <div style="border-top:2px solid var(--border);padding-top:12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
       <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted)">ACTION ITEMS</span>
       <button class="ibtn" onclick="showAddAct()">＋ 追加</button>
     </div>
@@ -384,10 +381,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
       <div id="pastActList"></div>
     </div>
   </div>
-  <div style="height:20px"></div>
+  <div style="height:10px"></div>
+</div>
 
 
-<div id="scr-action" style="display:none!important"></div>
+<div class="screen" id="scr-action"></div>
 
 <!-- ===== EXPORT ===== -->
 <div class="screen" id="scr-export">
@@ -700,7 +698,7 @@ function renderMapLink(){
 // Use explicit ID map — avoids capitalize bugs
 var SCREEN_IDS = {
   home:'scr-home', check:'scr-check', proc:'scr-proc',
-  issue:'scr-issue', agenda:'scr-agenda', export:'scr-export'
+  issue:'scr-issue', summary:'scr-summary', agenda:'scr-agenda', action:'scr-action', export:'scr-export'
 };
 var TAB_IDS = {
   home:'tab-home', check:'tab-check', proc:'tab-proc',
@@ -710,15 +708,13 @@ var TAB_IDS = {
 // タブの即時切り替え（視覚のみ）
 function switchTabVisual(name){
   Object.keys(SCREEN_IDS).forEach(function(k){
-    var sc=document.getElementById(SCREEN_IDS[k]);
-    var tb=document.getElementById(TAB_IDS[k]);
-    if(sc)sc.classList.remove('active');
-    if(tb)tb.classList.remove('active');
+    document.getElementById(SCREEN_IDS[k]).classList.remove('active');
   });
-  var sc=document.getElementById(SCREEN_IDS[name]);
-  var tb=document.getElementById(TAB_IDS[name]);
-  if(sc)sc.classList.add('active');
-  if(tb)tb.classList.add('active');
+  Object.keys(TAB_IDS).forEach(function(k){
+    document.getElementById(TAB_IDS[k]).classList.remove('active');
+  });
+  document.getElementById(SCREEN_IDS[name]).classList.add('active');
+  if(TAB_IDS[name])document.getElementById(TAB_IDS[name]).classList.add('active');
 }
 
 // 描画処理（遅延実行）
@@ -726,7 +722,9 @@ function renderTab(name){
   if(name==='check')   renderChecklist();
   else if(name==='proc')    renderProcs();
   else if(name==='issue')   renderIssues();
+  else if(name==='summary') renderSummary();
   else if(name==='agenda')  {if(!cur.agenda)cur.agenda={items:[],attendees:{my:[],their:[]}};cur.agenda.meta=getAgendaMeta();renderAgenda();renderSummary();renderActions();}
+  else if(name==='action')  renderActions();
   else if(name==='export')  renderExport();
   else if(name==='home')    {renderMapLink();renderHomeScore();}
   updateBadges();
