@@ -931,7 +931,7 @@ function renderProcMPhotos(){
 }
 
 // ===== ISSUE =====
-function addIssue(){cur.issues.push({id:Date.now(),title:'',detail:'',status:'open',priority:'high',due:'',owner:''});saveLS();renderIssues();}
+function addIssue(){cur.issues.push({id:Date.now(),title:'',detail:'',decision:'',actionText:'',actionOwner:'',actionDue:'',photos:[],status:'open',priority:'high',due:'',owner:''});saveLS();renderIssues();}
 function deleteIssue(id){
   var x=cur.issues.find(function(i){return i.id==id;});
   if(!confirm('「'+(x&&x.title||'この課題')+'」を削除しますか？'))return;
@@ -950,29 +950,82 @@ function renderIssues(){
   if(!cur.issues.length){list.innerHTML='<div class="empty">＋課題追加ボタンで登録</div>';return;}
   cur.issues.forEach(function(iss,i){
     var bc=iss.status==='done'?'var(--success)':iss.status==='wip'?'var(--warn)':'var(--danger)';
+    var photos=iss.photos||[];
     var div=document.createElement('div');div.className='iss-item';div.style.borderLeft='3px solid '+bc;
-    div.innerHTML='<div class="iss-hdr">'+
-      '<span class="iss-num">#'+String(i+1).padStart(2,'0')+'</span>'+
-      '<input class="iss-tin" type="text" placeholder="課題タイトル" value="'+esc(iss.title)+'" oninput="updateIssue(\''+iss.id+'\',\'title\',this.value)">'+
-      '<button onclick="deleteIssue(\''+iss.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer">🗑</button>'+
-    '</div>'+
-    '<textarea class="fta" style="min-height:52px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:6px" placeholder="詳細・背景…" oninput="updateIssue(\''+iss.id+'\',\'detail\',this.value)">'+esc(iss.detail)+'</textarea>'+
-    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-      '<select class="isel" onchange="updateIssue(\''+iss.id+'\',\'status\',this.value)">'+
-        '<option value="open"'+(iss.status==='open'?' selected':'')+'>未対応</option>'+
-        '<option value="wip"'+(iss.status==='wip'?' selected':'')+'>対応中</option>'+
-        '<option value="done"'+(iss.status==='done'?' selected':'')+'>完了</option>'+
-      '</select>'+
-      '<select class="isel" onchange="updateIssue(\''+iss.id+'\',\'priority\',this.value)">'+
-        '<option value="high"'+(iss.priority==='high'?' selected':'')+'>🔴 高</option>'+
-        '<option value="mid"'+(iss.priority==='mid'?' selected':'')+'>🟡 中</option>'+
-        '<option value="low"'+(iss.priority==='low'?' selected':'')+'>🟢 低</option>'+
-      '</select>'+
-      '<input class="isel" type="date" style="color-scheme:dark;flex:1" value="'+esc(iss.due||'')+'" onchange="updateIssue(\''+iss.id+'\',\'due\',this.value)">'+
-    '</div>'+
-    '<div style="margin-top:6px"><input class="fi" type="text" placeholder="担当者" value="'+esc(iss.owner||'')+'" oninput="updateIssue(\''+iss.id+'\',\'owner\',this.value)"></div>';
+    div.innerHTML=
+      // ① タイトル
+      '<div class="iss-hdr">'+
+        '<span class="iss-num">#'+String(i+1).padStart(2,'0')+'</span>'+
+        '<input class="iss-tin" type="text" placeholder="議題・タイトル" value="'+esc(iss.title)+'" oninput="updateIssue(\''+iss.id+'\',\'title\',this.value)">'+
+        '<button onclick="deleteIssue(\''+iss.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer">🗑</button>'+
+      '</div>'+
+      // ② 詳細・背景
+      '<div style="font-size:10px;color:var(--muted);margin:2px 0 4px;font-family:var(--mono);letter-spacing:1px">詳細・背景</div>'+
+      '<textarea class="fta" style="min-height:52px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:10px" placeholder="詳細・背景…" oninput="updateIssue(\''+iss.id+'\',\'detail\',this.value)">'+esc(iss.detail)+'</textarea>'+
+      // ③ 決定事項
+      '<div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--mono);letter-spacing:1px">決定事項</div>'+
+      '<textarea class="fta" style="min-height:44px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:10px" placeholder="決定事項・対応方針…" oninput="updateIssue(\''+iss.id+'\',\'decision\',this.value)">'+esc(iss.decision||'')+'</textarea>'+
+      // ④ アクション
+      '<div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:var(--mono);letter-spacing:1px">アクション</div>'+
+      '<textarea class="fta" style="min-height:44px;padding:7px 10px;font-size:12px;background:var(--card2);border-radius:8px;margin-bottom:6px" placeholder="アクション内容…" oninput="updateIssue(\''+iss.id+'\',\'actionText\',this.value)">'+esc(iss.actionText||'')+'</textarea>'+
+      '<div style="display:flex;gap:6px;margin-bottom:10px">'+
+        '<input class="fi" style="flex:1" type="text" placeholder="担当者" value="'+esc(iss.actionOwner||'')+'" oninput="updateIssue(\''+iss.id+'\',\'actionOwner\',this.value)">'+
+        '<input class="fi" style="flex:1;color-scheme:dark" type="date" value="'+esc(iss.actionDue||'')+'" onchange="updateIssue(\''+iss.id+'\',\'actionDue\',this.value)">'+
+      '</div>'+
+      // ⑤ ステータス・優先度
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+
+        '<select class="isel" onchange="updateIssue(\''+iss.id+'\',\'status\',this.value)">'+
+          '<option value="open"'+(iss.status==='open'?' selected':'')+'>未対応</option>'+
+          '<option value="wip"'+(iss.status==='wip'?' selected':'')+'>対応中</option>'+
+          '<option value="done"'+(iss.status==='done'?' selected':'')+'>完了</option>'+
+        '</select>'+
+        '<select class="isel" onchange="updateIssue(\''+iss.id+'\',\'priority\',this.value)">'+
+          '<option value="high"'+(iss.priority==='high'?' selected':'')+'>🔴 高</option>'+
+          '<option value="mid"'+(iss.priority==='mid'?' selected':'')+'>🟡 中</option>'+
+          '<option value="low"'+(iss.priority==='low'?' selected':'')+'>🟢 低</option>'+
+        '</select>'+
+      '</div>'+
+      // ⑥ 写真
+      '<div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:var(--mono);letter-spacing:1px">写真・画像</div>'+
+      '<div style="display:flex;gap:6px;margin-bottom:6px">'+
+        '<label style="flex:1;text-align:center;background:rgba(0,200,255,.07);border:1px dashed rgba(0,200,255,.25);border-radius:8px;color:var(--accent);font-size:11px;padding:7px;cursor:pointer;font-family:var(--mono)">'+
+          '🖼 ライブラリ<input type="file" accept="image/*" multiple style="display:none" onchange="addIssuePhotos(\''+iss.id+'\',this)">'+
+        '</label>'+
+        '<label style="flex:1;text-align:center;background:rgba(0,200,255,.07);border:1px dashed rgba(0,200,255,.25);border-radius:8px;color:var(--accent);font-size:11px;padding:7px;cursor:pointer;font-family:var(--mono)">'+
+          '📷 カメラ<input type="file" accept="image/*" capture="environment" style="display:none" onchange="addIssuePhotos(\''+iss.id+'\',this)">'+
+        '</label>'+
+      '</div>'+
+      (photos.length?
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:4px">'+
+          photos.map(function(p,pi){
+            return '<div style="position:relative;border-radius:7px;overflow:hidden;aspect-ratio:1">'+
+              '<img src="'+(p.src||p)+'" style="width:100%;height:100%;object-fit:cover;display:block">'+
+              '<button onclick="deleteIssuePhoto(\''+iss.id+'\','+pi+')" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>'+
+            '</div>';
+          }).join('')+
+        '</div>':
+      '');
     list.appendChild(div);
   });
+}
+
+function addIssuePhotos(id,input){
+  var iss=cur.issues.find(function(x){return x.id==id;});if(!iss)return;
+  if(!iss.photos)iss.photos=[];
+  var files=Array.from(input.files);
+  var loaded=0;
+  files.forEach(function(f){
+    var r=new FileReader();
+    r.onload=function(e){
+      iss.photos.push({src:e.target.result,comment:''});
+      loaded++;if(loaded===files.length){saveLS();renderIssues();}
+    };r.readAsDataURL(f);
+  });
+}
+function deleteIssuePhoto(id,idx){
+  var iss=cur.issues.find(function(x){return x.id==id;});
+  if(!iss||!iss.photos)return;
+  iss.photos.splice(idx,1);saveLS();renderIssues();
 }
 
 // ===== SUMMARY =====
