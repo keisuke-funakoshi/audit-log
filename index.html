@@ -301,15 +301,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 </div>
 
 <!-- ===== SUMMARY ===== -->
-<div class="screen" id="scr-summary">
-  <div style="padding:10px 13px 0">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted)">LAUNCH SUMMARY</span>
-      <button class="ibtn" onclick="addSum()">＋ 事象追加</button>
-    </div>
-    <div id="sumList"></div>
-  </div>
-</div>
+<div class="screen" id="scr-summary" style="display:none!important"></div>
 
 <!-- ===== AGENDA ===== -->
 <div class="screen" id="scr-agenda">
@@ -353,12 +345,22 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
     <button class="big-btn" style="margin-bottom:8px;background:linear-gradient(135deg,#005500,#00aa44)" onclick="printAgenda()">🖨 &nbsp;アジェンダをPDF印刷</button>
   </div>
   <div style="height:10px"></div>
-</div>
 
+  <!-- ===== サマリーセクション ===== -->
+  <div style="padding:0 13px">
+    <div style="border-top:2px solid var(--border);margin:4px 0 12px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted)">LAUNCH SUMMARY</span>
+      <button class="ibtn" onclick="addSum()">＋ 事象追加</button>
+    </div>
+    <div id="sumList"></div>
+  </div>
 
-<!-- ===== ACTION ===== -->
-<div class="screen" id="scr-action">
-  <div style="padding:10px 13px 0">
+  <!-- ===== アクションセクション ===== -->
+  <div style="padding:0 13px">
+    <div style="border-top:2px solid var(--border);margin:12px 0 12px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted)">ACTION ITEMS</span>
       <button class="ibtn" onclick="showAddAct()">＋ 追加</button>
     </div>
     <div id="actAddForm" class="add-form">
@@ -382,7 +384,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
       <div id="pastActList"></div>
     </div>
   </div>
-</div>
+  <div style="height:20px"></div>
+
+
+<div class="screen" id="scr-action" style="display:none!important"></div>
 
 <!-- ===== EXPORT ===== -->
 <div class="screen" id="scr-export">
@@ -586,12 +591,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 
 <div id="bottomNav">
   <button class="ntab active" id="tab-home"><span class="ntab-i">🏠</span><span class="ntab-l">訪問</span></button>
-  <button class="ntab"        id="tab-agenda"><span class="ntab-i">📨</span><span class="ntab-l">アジェンダ</span></button>
+  <button class="ntab"        id="tab-agenda"><span class="ntab-i">📨</span><span class="ntab-l">議題/記録</span></button>
   <button class="ntab"        id="tab-check"><span class="ntab-i">✅</span><span class="ntab-l">チェック</span></button>
   <button class="ntab"        id="tab-proc"><span class="ntab-i">📷</span><span class="ntab-l">設備/工程</span></button>
   <button class="ntab"        id="tab-issue"><span class="ntab-i">⚠️</span><span class="ntab-l">課題</span></button>
-  <button class="ntab"        id="tab-summary"><span class="ntab-i">📋</span><span class="ntab-l">サマリー</span></button>
-  <button class="ntab"        id="tab-action"><span class="ntab-i">⚡</span><span class="ntab-l">アクション</span></button>
   <button class="ntab"        id="tab-export"><span class="ntab-i">📤</span><span class="ntab-l">出力</span></button>
 </div>
 <div id="toast"></div>
@@ -697,11 +700,11 @@ function renderMapLink(){
 // Use explicit ID map — avoids capitalize bugs
 var SCREEN_IDS = {
   home:'scr-home', check:'scr-check', proc:'scr-proc',
-  issue:'scr-issue', summary:'scr-summary', agenda:'scr-agenda', action:'scr-action', export:'scr-export'
+  issue:'scr-issue', agenda:'scr-agenda', export:'scr-export'
 };
 var TAB_IDS = {
   home:'tab-home', check:'tab-check', proc:'tab-proc',
-  issue:'tab-issue', summary:'tab-summary', agenda:'tab-agenda', action:'tab-action', export:'tab-export'
+  issue:'tab-issue', agenda:'tab-agenda', export:'tab-export'
 };
 
 // タブの即時切り替え（視覚のみ）
@@ -719,9 +722,7 @@ function renderTab(name){
   if(name==='check')   renderChecklist();
   else if(name==='proc')    renderProcs();
   else if(name==='issue')   renderIssues();
-  else if(name==='summary') renderSummary();
-  else if(name==='agenda')  {if(!cur.agenda)cur.agenda={items:[],attendees:{my:[],their:[]}};cur.agenda.meta=getAgendaMeta();renderAgenda();}
-  else if(name==='action')  renderActions();
+  else if(name==='agenda')  {if(!cur.agenda)cur.agenda={items:[],attendees:{my:[],their:[]}};cur.agenda.meta=getAgendaMeta();renderAgenda();renderSummary();renderActions();}
   else if(name==='export')  renderExport();
   else if(name==='home')    {renderMapLink();renderHomeScore();}
   updateBadges();
