@@ -1025,6 +1025,7 @@ function renderIssues(){
           '📷 カメラ<input type="file" accept="image/*" capture="environment" style="display:none" onchange="addIssuePhotos(\''+iss.id+'\',this)">'+
         '</label>'+
       '</div>'+
+      '<div class="paste-zone" contenteditable="true" data-iss-id="'+iss.id+'" data-placeholder="ここをタップしてコピーした画像を貼り付け（⌘V / 長押し→ペースト）" style="margin-bottom:6px;min-height:34px;border:1px dashed rgba(0,200,255,.25);border-radius:8px;background:rgba(0,200,255,.03);color:var(--muted);font-size:10px;padding:8px 10px;outline:none;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4"></div>'+
       (photos.length?
         '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:4px">'+
           photos.map(function(p,pi){
@@ -1036,6 +1037,30 @@ function renderIssues(){
         '</div>':
       '');
     list.appendChild(div);
+    div.querySelectorAll('.paste-zone').forEach(function(zone){
+      if(!zone.textContent)zone.textContent=zone.getAttribute('data-placeholder');
+      zone.addEventListener('focus',function(){if(zone.textContent===zone.getAttribute('data-placeholder'))zone.textContent='';});
+      zone.addEventListener('blur',function(){if(!zone.textContent.trim())zone.textContent=zone.getAttribute('data-placeholder');});
+      zone.addEventListener('paste',function(e){
+        e.preventDefault();
+        var items=(e.clipboardData||window.clipboardData).items;
+        var found=false;
+        for(var k=0;k<items.length;k++){
+          if(items[k].type.indexOf('image')!==-1){
+            found=true;
+            var file=items[k].getAsFile();
+            var r=new FileReader();
+            r.onload=function(ev){
+              var issId=zone.getAttribute('data-iss-id');
+              var iss2=cur.issues.find(function(x){return x.id==issId;});
+              if(iss2){if(!iss2.photos)iss2.photos=[];iss2.photos.push({src:ev.target.result,comment:''});saveLS();renderIssues();toast('画像を貼り付けました');}
+            };
+            r.readAsDataURL(file);
+          }
+        }
+        if(!found)toast('画像が見つかりませんでした','var(--warn)');
+      });
+    });
   });
 }
 
