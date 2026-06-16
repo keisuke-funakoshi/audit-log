@@ -897,10 +897,12 @@ function renderProcs(){
   cur.procs.forEach(function(p,i){
     var div=document.createElement('div');div.className='proc-item';
     div.innerHTML='<div class="proc-hdr">'+
-      '<span style="font-family:var(--mono);font-size:16px;color:var(--accent);font-weight:700;min-width:26px">'+String(i+1).padStart(2,'0')+'</span>'+
-      '<input class="proc-nin" type="text" placeholder="設備名・工程名" value="'+esc(p.name)+'" oninput="updateProcName(\''+p.id+'\',this.value)">'+
-      '<button onclick="openProcModal(\''+p.id+'\')" style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:var(--accent);border-radius:7px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:var(--mono)">📷 '+(p.photos&&p.photos.length?p.photos.length+'枚':'写真/メモ')+'</button>'+
-      '<button onclick="deleteProc(\''+p.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer">🗑</button>'+
+      '<span style="font-family:var(--mono);font-size:16px;color:var(--accent);font-weight:700;min-width:26px;flex-shrink:0">'+String(i+1).padStart(2,'0')+'</span>'+
+      '<input class="proc-nin" type="text" placeholder="設備名・工程名" value="'+esc(p.name)+'" oninput="updateProcName(\''+p.id+'\',this.value)" style="min-width:0">'+
+      '<button onclick="deleteProc(\''+p.id+'\')" style="flex-shrink:0;background:rgba(255,65,87,.08);border:1px solid rgba(255,65,87,.25);color:var(--danger);font-size:14px;cursor:pointer;border-radius:7px;padding:5px 9px;line-height:1">🗑</button>'+
+    '</div>'+
+    '<div style="padding:8px 13px;display:flex">'+
+      '<button onclick="openProcModal(\''+p.id+'\')" style="width:100%;background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:var(--accent);border-radius:7px;padding:7px 10px;font-size:11px;cursor:pointer;font-family:var(--mono)">📷 '+(p.photos&&p.photos.length?p.photos.length+'枚の写真・メモを編集':'写真・メモを追加')+'</button>'+
     '</div>'+
     (p.note?'<div style="padding:8px 13px;font-size:11px;color:var(--muted);line-height:1.6">'+esc(p.note)+'</div>':'')+
     (p.photos&&p.photos.length?'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px 13px 10px">'+p.photos.slice(0,4).map(function(s){return '<div style="border-radius:6px;overflow:hidden;aspect-ratio:1"><img src="'+s+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';}).join('')+'</div>':'');
@@ -1231,6 +1233,13 @@ function deleteAgItem(id){
   cur.agenda.items=cur.agenda.items.filter(function(x){return x.id!=id;});
   saveLS();renderAgenda();
 }
+function moveAgItem(idx,dir){
+  var arr=cur.agenda.items;
+  var newIdx=idx+dir;
+  if(newIdx<0||newIdx>=arr.length)return;
+  var tmp=arr[idx];arr[idx]=arr[newIdx];arr[newIdx]=tmp;
+  saveLS();renderAgenda();
+}
 var _agSaveTimer = null;
 function updateAg(id,f,val){
   var x=cur.agenda.items.find(function(i){return i.id==id;});
@@ -1267,7 +1276,15 @@ function renderAgenda(){
     var dBtn=document.createElement('button');
     dBtn.textContent='🗑';dBtn.style.cssText='background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer;flex-shrink:0;';
     dBtn.addEventListener('click',function(){deleteAgItem(it.id);});
-    hdr.appendChild(num);hdr.appendChild(tIn);hdr.appendChild(dBtn);
+    var upBtn=document.createElement('button');
+    upBtn.textContent='▲';upBtn.style.cssText='background:transparent;border:none;color:'+(i===0?'var(--border)':'var(--muted)')+';font-size:12px;cursor:pointer;flex-shrink:0;padding:2px 4px;';
+    upBtn.disabled=(i===0);
+    upBtn.addEventListener('click',function(){moveAgItem(i,-1);});
+    var dnBtn=document.createElement('button');
+    dnBtn.textContent='▼';dnBtn.style.cssText='background:transparent;border:none;color:'+(i===cur.agenda.items.length-1?'var(--border)':'var(--muted)')+';font-size:12px;cursor:pointer;flex-shrink:0;padding:2px 4px;';
+    dnBtn.disabled=(i===cur.agenda.items.length-1);
+    dnBtn.addEventListener('click',function(){moveAgItem(i,1);});
+    hdr.appendChild(num);hdr.appendChild(tIn);hdr.appendChild(upBtn);hdr.appendChild(dnBtn);hdr.appendChild(dBtn);
 
     // 時間・担当者
     var row2=document.createElement('div');
