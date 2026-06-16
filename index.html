@@ -104,8 +104,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
 /* ISSUE */
 .iss-item{background:var(--card);border-radius:11px;border:1px solid var(--border);padding:11px 13px;margin-bottom:8px;}
 .iss-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.iss-num{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;}
-.iss-tin{flex:1;background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:500;outline:none;}
+.iss-num{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;flex-shrink:0;}
+.iss-tin{flex:1;min-width:0;background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:500;outline:none;}
 .iss-tin::placeholder{color:var(--muted);}
 .isel{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:5px 9px;color:var(--text);font-size:11px;outline:none;cursor:pointer;font-family:var(--mono);}
 /* SUMMARY */
@@ -955,6 +955,12 @@ function deleteIssue(id){
   if(!confirm('「'+(x&&x.title||'この課題')+'」を削除しますか？'))return;
   cur.issues=cur.issues.filter(function(x){return x.id!=id;});saveLS();renderIssues();
 }
+function moveIssue(idx,dir){
+  var newIdx=idx+dir;
+  if(newIdx<0||newIdx>=cur.issues.length)return;
+  var tmp=cur.issues[idx];cur.issues[idx]=cur.issues[newIdx];cur.issues[newIdx]=tmp;
+  saveLS();renderIssues();
+}
 function updateIssue(id,f,val){var x=cur.issues.find(function(i){return i.id==id;});if(x){x[f]=val;saveLS();}}
 function renderIssues(){
   var st=document.getElementById('issueStats');
@@ -975,7 +981,9 @@ function renderIssues(){
       '<div class="iss-hdr">'+
         '<span class="iss-num">#'+String(i+1).padStart(2,'0')+'</span>'+
         '<input class="iss-tin" type="text" placeholder="議題・タイトル" value="'+esc(iss.title)+'" oninput="updateIssue(\''+iss.id+'\',\'title\',this.value)">'+
-        '<button onclick="deleteIssue(\''+iss.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer">🗑</button>'+
+        '<button onclick="moveIssue('+i+',-1)" '+(i===0?'disabled':'')+' style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:'+(i===0?'rgba(74,96,128,.4)':'var(--accent)')+';font-size:11px;cursor:pointer;flex-shrink:0;padding:5px 7px;border-radius:6px;line-height:1">▲</button>'+
+        '<button onclick="moveIssue('+i+',1)" '+(i===cur.issues.length-1?'disabled':'')+' style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:'+(i===cur.issues.length-1?'rgba(74,96,128,.4)':'var(--accent)')+';font-size:11px;cursor:pointer;flex-shrink:0;padding:5px 7px;border-radius:6px;line-height:1">▼</button>'+
+        '<button onclick="deleteIssue(\''+iss.id+'\')" style="background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer;flex-shrink:0">🗑</button>'+
       '</div>'+
       // ② 詳細・背景
       '<div style="font-size:10px;color:var(--muted);margin:2px 0 4px;font-family:var(--mono);letter-spacing:1px">詳細・背景</div>'+
