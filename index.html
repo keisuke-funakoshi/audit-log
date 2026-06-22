@@ -1772,10 +1772,22 @@ function buildPrint(meta,checklist,procs,issues,summary,actions,score,chks){
       h+='<span style="font-size:11px;font-weight:700;color:#1a2332;flex:1;">'+esc(iss.title||'（未入力）')+'</span>';
       h+='<span style="font-size:9px;color:#7a9ab0;font-family:monospace;">'+stl[iss.status]+'</span>';
       h+='</div>';
-      if(iss.detail)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:3px;">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>';
+      if(iss.detail)h+='<div style="font-size:10px;color:#334455;line-height:1.7;margin-bottom:5px;">'+esc(iss.detail).replace(/\n/g,'<br>')+'</div>';
+      if(iss.decision)h+='<div style="margin-bottom:5px;"><div style="font-size:8px;color:#7a9ab0;font-family:monospace;margin-bottom:2px;">決定事項</div><div style="font-size:10px;color:#334455;line-height:1.7;">'+esc(iss.decision).replace(/\n/g,'<br>')+'</div></div>';
+      if(iss.issActions&&iss.issActions.length){
+        h+='<div style="margin-bottom:5px;"><div style="font-size:8px;color:#7a9ab0;font-family:monospace;margin-bottom:3px;">アクション</div>';
+        iss.issActions.forEach(function(a){
+          if(!a.text)return;
+          h+='<div style="font-size:9px;color:#1a2332;padding:2px 0;border-bottom:1px solid #eef0f3;">'+
+            '▶ '+esc(a.text)+
+            (a.owner?'　<span style="color:#7a9ab0;">担当：'+esc(a.owner)+'</span>':'')+
+            (a.due?'　<span style="color:#7a9ab0;">期限：'+esc(a.due)+'</span>':'')+
+          '</div>';
+        });
+        h+='</div>';
+      }
       h+='<div style="font-size:9px;color:#7a9ab0;font-family:monospace;">'+
         (iss.priority?'優先：'+{'high':'高','mid':'中','low':'低'}[iss.priority]+'　':'')+
-        (iss.due?'期限：'+iss.due+'　':'')+(iss.owner?'担当：'+esc(iss.owner):'')+
       '</div></td></tr><tr><td style="height:6px;"></td></tr>';
     });
     h+='</table>';
