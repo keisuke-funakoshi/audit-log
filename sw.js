@@ -1,9 +1,9 @@
-// Service Worker - キャッシュファースト版（GitHub Pages対応・クラッシュ防止）
-var CACHE_NAME = 'audit-log-v1';
+// Service Worker - 安定版（iOS PWAクラッシュ・画面切替バグ防止）
+var CACHE_NAME = 'audit-log-pwa-v2';
 var CORE_FILES = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', function(e){
-  self.skipWaiting();
+  // skipWaiting() を削除 → 入力中に突然SW更新・画面切替が起きなくなる
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache){
       return cache.addAll(CORE_FILES);
@@ -20,11 +20,11 @@ self.addEventListener('activate', function(e){
         return caches.delete(k);
       }));
     })
+    // clients.claim() を削除 → 強制引き継ぎによる画面切替が起きなくなる
   );
-  self.clients.claim();
 });
 
-// ネットワーク優先・失敗時はキャッシュから返す（クラッシュ防止の核心）
+// ネットワーク優先・失敗時はキャッシュから返す
 self.addEventListener('fetch', function(e){
   if(e.request.method !== 'GET'){
     e.respondWith(fetch(e.request));
@@ -40,7 +40,7 @@ self.addEventListener('fetch', function(e){
       }
       return response;
     }).catch(function(){
-      // ネットワーク失敗 → キャッシュから返す（クラッシュを防ぐ）
+      // ネットワーク失敗 → キャッシュから返す
       return caches.match(e.request).then(function(cached){
         return cached || new Response('Offline', {status: 503});
       });
