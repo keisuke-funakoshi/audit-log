@@ -213,11 +213,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
   <div style="padding:10px 13px 0;display:flex;flex-direction:column;gap:10px">
     <div class="card">
       <div class="card-hdr"><span class="chd"></span>訪問情報</div>
-      <div class="mrow"><span class="mico">🏭</span><span class="mkey">サプライヤ</span><input class="mval" id="hName" type="text" placeholder="株式会社○○製作所" oninput="saveLS()"></div>
+      <div class="mrow"><span class="mico">🏭</span><span class="mkey">サプライヤ</span><input class="mval" id="hName" type="text" placeholder="株式会社○○製作所" oninput="saveLSDebounced()"></div>
       <div class="mrow"><span class="mico">📅</span><span class="mkey">訪問日</span><input class="mval" id="hDate" type="date" style="color-scheme:dark" onchange="saveLS()"></div>
-      <div class="mrow"><span class="mico">📍</span><span class="mkey">住所</span><input class="mval" id="hAddr" type="text" placeholder="愛知県名古屋市…" oninput="saveLS();renderMapLink()"></div>
-      <div class="mrow"><span class="mico">👤</span><span class="mkey">自社担当</span><input class="mval" id="hRep" type="text" placeholder="氏名" oninput="saveLS()"></div>
-      <div class="mrow"><span class="mico">🤝</span><span class="mkey">先方担当</span><input class="mval" id="hCon" type="text" placeholder="先方担当者" oninput="saveLS()"></div>
+      <div class="mrow"><span class="mico">📍</span><span class="mkey">住所</span><input class="mval" id="hAddr" type="text" placeholder="愛知県名古屋市…" oninput="saveLSDebounced();renderMapLink()"></div>
+      <div class="mrow"><span class="mico">👤</span><span class="mkey">自社担当</span><input class="mval" id="hRep" type="text" placeholder="氏名" oninput="saveLSDebounced()"></div>
+      <div class="mrow"><span class="mico">🤝</span><span class="mkey">先方担当</span><input class="mval" id="hCon" type="text" placeholder="先方担当者" oninput="saveLSDebounced()"></div>
       <div class="mrow" style="border-bottom:none"><span class="mico">🏷</span><span class="mkey">訪問目的</span>
         <select class="mval" id="hPurp" onchange="saveLS()" style="background:transparent;border:none;color:var(--text);outline:none;cursor:pointer;font-size:13px;">
           <option value="">選択</option><option value="品質監査">品質監査</option><option value="工場視察">工場視察</option>
@@ -229,7 +229,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans
     <div id="mapWrap"></div>
     <div class="card">
       <div class="card-hdr"><span class="chd"></span>全体所感</div>
-      <textarea class="fta" id="hOver" rows="3" placeholder="訪問全体の所感、特記事項など…" oninput="saveLS()"></textarea>
+      <textarea class="fta" id="hOver" rows="3" placeholder="訪問全体の所感、特記事項など…" oninput="saveLSDebounced()"></textarea>
     </div>
     <div class="card">
       <div class="card-hdr"><span class="chd"></span>チェックスコア</div>
@@ -644,6 +644,12 @@ var clMKey = null, clSz='sm', pSz='sm', sSz='sm', procMId=null, sumMId=null;
 
 // ========== DB ==========
 var db=null;
+// ===== DEBOUNCE SAVE (入力中のDB書き込み頻度を抑制・クラッシュ防止) =====
+var _debounceSaveTimer=null;
+function saveLSDebounced(){
+  clearTimeout(_debounceSaveTimer);
+  _debounceSaveTimer=setTimeout(function(){saveLS();},500);
+}
 function openDB(cb){
   if(db){cb(db);return;}
   var r=indexedDB.open('auditLogDB3',1);
@@ -890,7 +896,7 @@ function deleteProc(id){
   if(!confirm('「'+(p&&p.name||'この工程')+'」を削除しますか？'))return;
   cur.procs=cur.procs.filter(function(p){return p.id!=id;});saveLS();renderProcs();
 }
-function updateProcName(id,val){var p=cur.procs.find(function(x){return x.id==id;});if(p){p.name=val;saveLS();}}
+function updateProcName(id,val){var p=cur.procs.find(function(x){return x.id==id;});if(p){p.name=val;saveLSDebounced();}}
 function renderProcs(){
   var list=document.getElementById('procList');list.innerHTML='';
   if(!cur.procs.length){list.innerHTML='<div class="empty">＋追加で設備・工程メモを登録</div>';return;}
@@ -948,7 +954,7 @@ function deleteIssueAction(issId,actId){
 function updateIssueAction(issId,actId,field,val){
   var iss=cur.issues.find(function(x){return x.id==issId;});if(!iss)return;
   var a=iss.issActions.find(function(a){return a.id==actId;});if(!a)return;
-  a[field]=val;saveLS();
+  a[field]=val;saveLSDebounced();
 }
 function deleteIssue(id){
   var x=cur.issues.find(function(i){return i.id==id;});
@@ -961,7 +967,7 @@ function moveIssue(idx,dir){
   var tmp=cur.issues[idx];cur.issues[idx]=cur.issues[newIdx];cur.issues[newIdx]=tmp;
   saveLS();renderIssues();
 }
-function updateIssue(id,f,val){var x=cur.issues.find(function(i){return i.id==id;});if(x){x[f]=val;saveLS();}}
+function updateIssue(id,f,val){var x=cur.issues.find(function(i){return i.id==id;});if(x){x[f]=val;saveLSDebounced();}}
 function renderIssues(){
   var st=document.getElementById('issueStats');
   var op=cur.issues.filter(function(x){return x.status==='open';}).length;
@@ -1098,7 +1104,7 @@ function deleteSum(id){
   if(!confirm('「'+(x&&x.title||'この事象')+'」を削除しますか？'))return;
   cur.summary=cur.summary.filter(function(x){return x.id!=id;});saveLS();renderSummary();
 }
-function updateSumTitle(id,val){var x=cur.summary.find(function(s){return s.id==id;});if(x){x.title=val;saveLS();}}
+function updateSumTitle(id,val){var x=cur.summary.find(function(s){return s.id==id;});if(x){x.title=val;saveLSDebounced();}}
 function renderSummary(){
   var list=document.getElementById('sumList');list.innerHTML='';
   if(!cur.summary.length){list.innerHTML='<div class="empty">＋事象追加ボタンで登録<br>事象タイトルと写真・詳細を記録できます</div>';return;}
